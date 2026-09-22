@@ -1,0 +1,1800 @@
+{
+  "sanity_check": {
+    "description": "Recomputed published macro success from frozen public trajectories and re-verified every controller transition with NanoJev own verifier (summarize_sonic_supervision.verify_episode).",
+    "cases_sha256": "d00f5b6aeaa9f2aac3e4b5010b31df4e86f77674cb588e17bc3f7d853e4a1f36",
+    "passed": true,
+    "runs": {
+      "selected": {
+        "macro": {
+          "test": 0.6684895833333333,
+          "ood": 0.45468749999999997
+        },
+        "published": {
+          "test": 0.6685,
+          "ood": 0.4547
+        },
+        "all_cells_match_published": true,
+        "transitions_verified": 11948
+      },
+      "jev": {
+        "macro": {
+          "test": 0.6539062499999999,
+          "ood": 0.43723958333333335
+        },
+        "published": {
+          "test": 0.6539,
+          "ood": 0.4372
+        },
+        "all_cells_match_published": true,
+        "transitions_verified": 19934
+      },
+      "native": {
+        "macro": {
+          "test": 0.15390625,
+          "ood": 0.12187499999999998
+        },
+        "published": {
+          "test": 0.1539,
+          "ood": 0.1219
+        },
+        "all_cells_match_published": true,
+        "transitions_verified": 19818
+      }
+    }
+  },
+  "frozen_cohort_548": {
+    "description": "NanoJev frozen 548-case cohort (274 test + 274 OOD), greedy controller epsilon 0.1 seed 17. vcdm row is our own rollout (compare_v1_frozen_episodes.jsonl, 28140 transitions verified); nanojev/jev/native_qwen rows are the frozen published trajectories.",
+    "weights": {
+      "maze": 0.3333333333333333,
+      "snake": 0.3333333333333333,
+      "basic": 0.16666666666666666,
+      "predict_position": 0.16666666666666666
+    },
+    "runs": {
+      "vcdm": {
+        "macro": {
+          "test": 0.11171875,
+          "ood": 0.0078125
+        },
+        "cells": {
+          "test/maze": {
+            "successes": 3,
+            "n": 10
+          },
+          "test/snake": {
+            "successes": 0,
+            "n": 8
+          },
+          "test/basic": {
+            "successes": 7,
+            "n": 128
+          },
+          "test/predict_position": {
+            "successes": 2,
+            "n": 128
+          },
+          "ood/maze": {
+            "successes": 0,
+            "n": 10
+          },
+          "ood/snake": {
+            "successes": 0,
+            "n": 8
+          },
+          "ood/basic": {
+            "successes": 6,
+            "n": 128
+          },
+          "ood/predict_position": {
+            "successes": 0,
+            "n": 128
+          }
+        }
+      },
+      "nanojev": {
+        "macro": {
+          "test": 0.6684895833333333,
+          "ood": 0.45468749999999997
+        },
+        "cells": {
+          "test/maze": {
+            "successes": 4,
+            "n": 10
+          },
+          "test/snake": {
+            "successes": 8,
+            "n": 8
+          },
+          "test/basic": {
+            "successes": 128,
+            "n": 128
+          },
+          "test/predict_position": {
+            "successes": 27,
+            "n": 128
+          },
+          "ood/maze": {
+            "successes": 2,
+            "n": 10
+          },
+          "ood/snake": {
+            "successes": 5,
+            "n": 8
+          },
+          "ood/basic": {
+            "successes": 128,
+            "n": 128
+          },
+          "ood/predict_position": {
+            "successes": 10,
+            "n": 128
+          }
+        }
+      },
+      "jev": {
+        "macro": {
+          "test": 0.6539062499999999,
+          "ood": 0.43723958333333335
+        },
+        "cells": {
+          "test/maze": {
+            "successes": 7,
+            "n": 10
+          },
+          "test/snake": {
+            "successes": 8,
+            "n": 8
+          },
+          "test/basic": {
+            "successes": 56,
+            "n": 128
+          },
+          "test/predict_position": {
+            "successes": 11,
+            "n": 128
+          },
+          "ood/maze": {
+            "successes": 3,
+            "n": 10
+          },
+          "ood/snake": {
+            "successes": 6,
+            "n": 8
+          },
+          "ood/basic": {
+            "successes": 59,
+            "n": 128
+          },
+          "ood/predict_position": {
+            "successes": 8,
+            "n": 128
+          }
+        }
+      },
+      "native_qwen": {
+        "macro": {
+          "test": 0.15390625,
+          "ood": 0.12187499999999998
+        },
+        "cells": {
+          "test/maze": {
+            "successes": 2,
+            "n": 10
+          },
+          "test/snake": {
+            "successes": 0,
+            "n": 8
+          },
+          "test/basic": {
+            "successes": 56,
+            "n": 128
+          },
+          "test/predict_position": {
+            "successes": 11,
+            "n": 128
+          },
+          "ood/maze": {
+            "successes": 1,
+            "n": 10
+          },
+          "ood/snake": {
+            "successes": 0,
+            "n": 8
+          },
+          "ood/basic": {
+            "successes": 59,
+            "n": 128
+          },
+          "ood/predict_position": {
+            "successes": 9,
+            "n": 128
+          }
+        }
+      }
+    },
+    "vcdm_paired_vs_jev": {
+      "test/maze": {
+        "n": 10,
+        "wins": 0,
+        "losses": 4,
+        "mcnemar_p": 0.125,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "test-maze16-7830000",
+          "test-maze8-308002",
+          "test-maze8-308040",
+          "test-maze8-308053"
+        ]
+      },
+      "test/snake": {
+        "n": 8,
+        "wins": 0,
+        "losses": 8,
+        "mcnemar_p": 0.0078125,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "test-snake12-7832000",
+          "test-snake12-7832001",
+          "test-snake8-318000",
+          "test-snake8-318001",
+          "test-snake8-318002",
+          "test-snake8-318003",
+          "test-snake8-318004",
+          "test-snake8-318005"
+        ]
+      },
+      "test/basic": {
+        "n": 128,
+        "wins": 5,
+        "losses": 54,
+        "mcnemar_p": 1.9067358802971057e-11,
+        "win_case_ids": [
+          "test-appo_basic-9030012",
+          "test-appo_basic-9030051",
+          "test-appo_basic-9030084",
+          "test-appo_basic-9030118",
+          "test-appo_basic-9030126"
+        ],
+        "loss_case_ids": [
+          "test-appo_basic-9030006",
+          "test-appo_basic-9030007",
+          "test-appo_basic-9030008",
+          "test-appo_basic-9030013",
+          "test-appo_basic-9030014",
+          "test-appo_basic-9030016",
+          "test-appo_basic-9030022",
+          "test-appo_basic-9030024",
+          "test-appo_basic-9030025",
+          "test-appo_basic-9030026",
+          "test-appo_basic-9030031",
+          "test-appo_basic-9030034",
+          "test-appo_basic-9030036",
+          "test-appo_basic-9030037",
+          "test-appo_basic-9030038",
+          "test-appo_basic-9030039",
+          "test-appo_basic-9030040",
+          "test-appo_basic-9030042",
+          "test-appo_basic-9030049",
+          "test-appo_basic-9030050",
+          "test-appo_basic-9030058",
+          "test-appo_basic-9030061",
+          "test-appo_basic-9030062",
+          "test-appo_basic-9030063",
+          "test-appo_basic-9030065",
+          "test-appo_basic-9030067",
+          "test-appo_basic-9030068",
+          "test-appo_basic-9030072",
+          "test-appo_basic-9030077",
+          "test-appo_basic-9030078",
+          "test-appo_basic-9030080",
+          "test-appo_basic-9030083",
+          "test-appo_basic-9030086",
+          "test-appo_basic-9030088",
+          "test-appo_basic-9030090",
+          "test-appo_basic-9030092",
+          "test-appo_basic-9030093",
+          "test-appo_basic-9030095",
+          "test-appo_basic-9030096",
+          "test-appo_basic-9030100",
+          "test-appo_basic-9030101",
+          "test-appo_basic-9030104",
+          "test-appo_basic-9030106",
+          "test-appo_basic-9030107",
+          "test-appo_basic-9030108",
+          "test-appo_basic-9030109",
+          "test-appo_basic-9030111",
+          "test-appo_basic-9030112",
+          "test-appo_basic-9030113",
+          "test-appo_basic-9030114",
+          "test-appo_basic-9030119",
+          "test-appo_basic-9030122",
+          "test-appo_basic-9030123",
+          "test-appo_basic-9030127"
+        ]
+      },
+      "test/predict_position": {
+        "n": 128,
+        "wins": 2,
+        "losses": 11,
+        "mcnemar_p": 0.0224609375,
+        "win_case_ids": [
+          "test-sonic_predict_position-9300745",
+          "test-sonic_predict_position-9300751"
+        ],
+        "loss_case_ids": [
+          "test-sonic_predict_position-9300644",
+          "test-sonic_predict_position-9300655",
+          "test-sonic_predict_position-9300672",
+          "test-sonic_predict_position-9300678",
+          "test-sonic_predict_position-9300687",
+          "test-sonic_predict_position-9300714",
+          "test-sonic_predict_position-9300721",
+          "test-sonic_predict_position-9300727",
+          "test-sonic_predict_position-9300732",
+          "test-sonic_predict_position-9300748",
+          "test-sonic_predict_position-9300760"
+        ]
+      },
+      "ood/maze": {
+        "n": 10,
+        "wins": 0,
+        "losses": 3,
+        "mcnemar_p": 0.25,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "ood-maze16-7840001",
+          "ood-maze8-408002",
+          "ood-maze8-408004"
+        ]
+      },
+      "ood/snake": {
+        "n": 8,
+        "wins": 0,
+        "losses": 6,
+        "mcnemar_p": 0.03125,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "ood-snake12-7842000",
+          "ood-snake12-7842001",
+          "ood-snake8-418000",
+          "ood-snake8-418001",
+          "ood-snake8-418003",
+          "ood-snake8-418004"
+        ]
+      },
+      "ood/basic": {
+        "n": 128,
+        "wins": 5,
+        "losses": 58,
+        "mcnemar_p": 1.6623508125590547e-12,
+        "win_case_ids": [
+          "ood-appo_basic-9040002",
+          "ood-appo_basic-9040053",
+          "ood-appo_basic-9040061",
+          "ood-appo_basic-9040087",
+          "ood-appo_basic-9040117"
+        ],
+        "loss_case_ids": [
+          "ood-appo_basic-9040007",
+          "ood-appo_basic-9040009",
+          "ood-appo_basic-9040010",
+          "ood-appo_basic-9040012",
+          "ood-appo_basic-9040015",
+          "ood-appo_basic-9040016",
+          "ood-appo_basic-9040017",
+          "ood-appo_basic-9040018",
+          "ood-appo_basic-9040020",
+          "ood-appo_basic-9040021",
+          "ood-appo_basic-9040025",
+          "ood-appo_basic-9040027",
+          "ood-appo_basic-9040028",
+          "ood-appo_basic-9040034",
+          "ood-appo_basic-9040035",
+          "ood-appo_basic-9040037",
+          "ood-appo_basic-9040043",
+          "ood-appo_basic-9040046",
+          "ood-appo_basic-9040047",
+          "ood-appo_basic-9040048",
+          "ood-appo_basic-9040049",
+          "ood-appo_basic-9040054",
+          "ood-appo_basic-9040055",
+          "ood-appo_basic-9040058",
+          "ood-appo_basic-9040062",
+          "ood-appo_basic-9040063",
+          "ood-appo_basic-9040065",
+          "ood-appo_basic-9040069",
+          "ood-appo_basic-9040070",
+          "ood-appo_basic-9040072",
+          "ood-appo_basic-9040073",
+          "ood-appo_basic-9040074",
+          "ood-appo_basic-9040075",
+          "ood-appo_basic-9040077",
+          "ood-appo_basic-9040080",
+          "ood-appo_basic-9040081",
+          "ood-appo_basic-9040082",
+          "ood-appo_basic-9040084",
+          "ood-appo_basic-9040085",
+          "ood-appo_basic-9040088",
+          "ood-appo_basic-9040089",
+          "ood-appo_basic-9040096",
+          "ood-appo_basic-9040098",
+          "ood-appo_basic-9040099",
+          "ood-appo_basic-9040101",
+          "ood-appo_basic-9040105",
+          "ood-appo_basic-9040106",
+          "ood-appo_basic-9040107",
+          "ood-appo_basic-9040108",
+          "ood-appo_basic-9040109",
+          "ood-appo_basic-9040110",
+          "ood-appo_basic-9040112",
+          "ood-appo_basic-9040113",
+          "ood-appo_basic-9040119",
+          "ood-appo_basic-9040120",
+          "ood-appo_basic-9040121",
+          "ood-appo_basic-9040122",
+          "ood-appo_basic-9040125"
+        ]
+      },
+      "ood/predict_position": {
+        "n": 128,
+        "wins": 0,
+        "losses": 8,
+        "mcnemar_p": 0.0078125,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "ood-sonic_predict_position-9300787",
+          "ood-sonic_predict_position-9300790",
+          "ood-sonic_predict_position-9300793",
+          "ood-sonic_predict_position-9300811",
+          "ood-sonic_predict_position-9300825",
+          "ood-sonic_predict_position-9300844",
+          "ood-sonic_predict_position-9300861",
+          "ood-sonic_predict_position-9300884"
+        ]
+      }
+    },
+    "vcdm_paired_vs_nanojev": {
+      "test/maze": {
+        "n": 10,
+        "wins": 0,
+        "losses": 1,
+        "mcnemar_p": 1.0,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "test-maze8-308002"
+        ]
+      },
+      "test/snake": {
+        "n": 8,
+        "wins": 0,
+        "losses": 8,
+        "mcnemar_p": 0.0078125,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "test-snake12-7832000",
+          "test-snake12-7832001",
+          "test-snake8-318000",
+          "test-snake8-318001",
+          "test-snake8-318002",
+          "test-snake8-318003",
+          "test-snake8-318004",
+          "test-snake8-318005"
+        ]
+      },
+      "test/basic": {
+        "n": 128,
+        "wins": 0,
+        "losses": 121,
+        "mcnemar_p": 7.52316384526264e-37,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "test-appo_basic-9030000",
+          "test-appo_basic-9030001",
+          "test-appo_basic-9030002",
+          "test-appo_basic-9030003",
+          "test-appo_basic-9030005",
+          "test-appo_basic-9030006",
+          "test-appo_basic-9030007",
+          "test-appo_basic-9030008",
+          "test-appo_basic-9030009",
+          "test-appo_basic-9030010",
+          "test-appo_basic-9030011",
+          "test-appo_basic-9030013",
+          "test-appo_basic-9030014",
+          "test-appo_basic-9030015",
+          "test-appo_basic-9030016",
+          "test-appo_basic-9030017",
+          "test-appo_basic-9030018",
+          "test-appo_basic-9030019",
+          "test-appo_basic-9030020",
+          "test-appo_basic-9030021",
+          "test-appo_basic-9030022",
+          "test-appo_basic-9030023",
+          "test-appo_basic-9030024",
+          "test-appo_basic-9030025",
+          "test-appo_basic-9030026",
+          "test-appo_basic-9030027",
+          "test-appo_basic-9030028",
+          "test-appo_basic-9030029",
+          "test-appo_basic-9030030",
+          "test-appo_basic-9030031",
+          "test-appo_basic-9030032",
+          "test-appo_basic-9030033",
+          "test-appo_basic-9030034",
+          "test-appo_basic-9030035",
+          "test-appo_basic-9030036",
+          "test-appo_basic-9030037",
+          "test-appo_basic-9030038",
+          "test-appo_basic-9030039",
+          "test-appo_basic-9030040",
+          "test-appo_basic-9030041",
+          "test-appo_basic-9030042",
+          "test-appo_basic-9030043",
+          "test-appo_basic-9030044",
+          "test-appo_basic-9030045",
+          "test-appo_basic-9030046",
+          "test-appo_basic-9030047",
+          "test-appo_basic-9030048",
+          "test-appo_basic-9030049",
+          "test-appo_basic-9030050",
+          "test-appo_basic-9030052",
+          "test-appo_basic-9030053",
+          "test-appo_basic-9030054",
+          "test-appo_basic-9030055",
+          "test-appo_basic-9030056",
+          "test-appo_basic-9030057",
+          "test-appo_basic-9030058",
+          "test-appo_basic-9030059",
+          "test-appo_basic-9030060",
+          "test-appo_basic-9030061",
+          "test-appo_basic-9030062",
+          "test-appo_basic-9030063",
+          "test-appo_basic-9030064",
+          "test-appo_basic-9030065",
+          "test-appo_basic-9030066",
+          "test-appo_basic-9030067",
+          "test-appo_basic-9030068",
+          "test-appo_basic-9030069",
+          "test-appo_basic-9030070",
+          "test-appo_basic-9030071",
+          "test-appo_basic-9030072",
+          "test-appo_basic-9030073",
+          "test-appo_basic-9030074",
+          "test-appo_basic-9030075",
+          "test-appo_basic-9030076",
+          "test-appo_basic-9030077",
+          "test-appo_basic-9030078",
+          "test-appo_basic-9030079",
+          "test-appo_basic-9030080",
+          "test-appo_basic-9030081",
+          "test-appo_basic-9030082",
+          "test-appo_basic-9030083",
+          "test-appo_basic-9030085",
+          "test-appo_basic-9030086",
+          "test-appo_basic-9030087",
+          "test-appo_basic-9030088",
+          "test-appo_basic-9030089",
+          "test-appo_basic-9030090",
+          "test-appo_basic-9030091",
+          "test-appo_basic-9030092",
+          "test-appo_basic-9030093",
+          "test-appo_basic-9030094",
+          "test-appo_basic-9030095",
+          "test-appo_basic-9030096",
+          "test-appo_basic-9030097",
+          "test-appo_basic-9030098",
+          "test-appo_basic-9030099",
+          "test-appo_basic-9030100",
+          "test-appo_basic-9030101",
+          "test-appo_basic-9030102",
+          "test-appo_basic-9030103",
+          "test-appo_basic-9030104",
+          "test-appo_basic-9030105",
+          "test-appo_basic-9030106",
+          "test-appo_basic-9030107",
+          "test-appo_basic-9030108",
+          "test-appo_basic-9030109",
+          "test-appo_basic-9030110",
+          "test-appo_basic-9030111",
+          "test-appo_basic-9030112",
+          "test-appo_basic-9030113",
+          "test-appo_basic-9030114",
+          "test-appo_basic-9030115",
+          "test-appo_basic-9030116",
+          "test-appo_basic-9030117",
+          "test-appo_basic-9030119",
+          "test-appo_basic-9030121",
+          "test-appo_basic-9030122",
+          "test-appo_basic-9030123",
+          "test-appo_basic-9030124",
+          "test-appo_basic-9030125",
+          "test-appo_basic-9030127"
+        ]
+      },
+      "test/predict_position": {
+        "n": 128,
+        "wins": 2,
+        "losses": 27,
+        "mcnemar_p": 1.6242265701293945e-06,
+        "win_case_ids": [
+          "test-sonic_predict_position-9300745",
+          "test-sonic_predict_position-9300751"
+        ],
+        "loss_case_ids": [
+          "test-sonic_predict_position-9300641",
+          "test-sonic_predict_position-9300645",
+          "test-sonic_predict_position-9300647",
+          "test-sonic_predict_position-9300657",
+          "test-sonic_predict_position-9300666",
+          "test-sonic_predict_position-9300667",
+          "test-sonic_predict_position-9300673",
+          "test-sonic_predict_position-9300677",
+          "test-sonic_predict_position-9300679",
+          "test-sonic_predict_position-9300683",
+          "test-sonic_predict_position-9300690",
+          "test-sonic_predict_position-9300692",
+          "test-sonic_predict_position-9300693",
+          "test-sonic_predict_position-9300699",
+          "test-sonic_predict_position-9300717",
+          "test-sonic_predict_position-9300720",
+          "test-sonic_predict_position-9300722",
+          "test-sonic_predict_position-9300725",
+          "test-sonic_predict_position-9300728",
+          "test-sonic_predict_position-9300730",
+          "test-sonic_predict_position-9300732",
+          "test-sonic_predict_position-9300738",
+          "test-sonic_predict_position-9300747",
+          "test-sonic_predict_position-9300753",
+          "test-sonic_predict_position-9300755",
+          "test-sonic_predict_position-9300760",
+          "test-sonic_predict_position-9300766"
+        ]
+      },
+      "ood/maze": {
+        "n": 10,
+        "wins": 0,
+        "losses": 2,
+        "mcnemar_p": 0.5,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "ood-maze8-408002",
+          "ood-maze8-408004"
+        ]
+      },
+      "ood/snake": {
+        "n": 8,
+        "wins": 0,
+        "losses": 5,
+        "mcnemar_p": 0.0625,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "ood-snake12-7842001",
+          "ood-snake8-418000",
+          "ood-snake8-418001",
+          "ood-snake8-418003",
+          "ood-snake8-418004"
+        ]
+      },
+      "ood/basic": {
+        "n": 128,
+        "wins": 0,
+        "losses": 122,
+        "mcnemar_p": 3.76158192263132e-37,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "ood-appo_basic-9040000",
+          "ood-appo_basic-9040001",
+          "ood-appo_basic-9040003",
+          "ood-appo_basic-9040004",
+          "ood-appo_basic-9040005",
+          "ood-appo_basic-9040006",
+          "ood-appo_basic-9040007",
+          "ood-appo_basic-9040008",
+          "ood-appo_basic-9040009",
+          "ood-appo_basic-9040010",
+          "ood-appo_basic-9040011",
+          "ood-appo_basic-9040012",
+          "ood-appo_basic-9040013",
+          "ood-appo_basic-9040014",
+          "ood-appo_basic-9040015",
+          "ood-appo_basic-9040016",
+          "ood-appo_basic-9040017",
+          "ood-appo_basic-9040018",
+          "ood-appo_basic-9040019",
+          "ood-appo_basic-9040020",
+          "ood-appo_basic-9040021",
+          "ood-appo_basic-9040022",
+          "ood-appo_basic-9040023",
+          "ood-appo_basic-9040024",
+          "ood-appo_basic-9040025",
+          "ood-appo_basic-9040026",
+          "ood-appo_basic-9040027",
+          "ood-appo_basic-9040028",
+          "ood-appo_basic-9040029",
+          "ood-appo_basic-9040030",
+          "ood-appo_basic-9040031",
+          "ood-appo_basic-9040032",
+          "ood-appo_basic-9040033",
+          "ood-appo_basic-9040034",
+          "ood-appo_basic-9040035",
+          "ood-appo_basic-9040036",
+          "ood-appo_basic-9040037",
+          "ood-appo_basic-9040038",
+          "ood-appo_basic-9040039",
+          "ood-appo_basic-9040040",
+          "ood-appo_basic-9040041",
+          "ood-appo_basic-9040042",
+          "ood-appo_basic-9040043",
+          "ood-appo_basic-9040044",
+          "ood-appo_basic-9040045",
+          "ood-appo_basic-9040046",
+          "ood-appo_basic-9040047",
+          "ood-appo_basic-9040048",
+          "ood-appo_basic-9040049",
+          "ood-appo_basic-9040050",
+          "ood-appo_basic-9040051",
+          "ood-appo_basic-9040052",
+          "ood-appo_basic-9040054",
+          "ood-appo_basic-9040055",
+          "ood-appo_basic-9040056",
+          "ood-appo_basic-9040057",
+          "ood-appo_basic-9040058",
+          "ood-appo_basic-9040059",
+          "ood-appo_basic-9040060",
+          "ood-appo_basic-9040062",
+          "ood-appo_basic-9040063",
+          "ood-appo_basic-9040064",
+          "ood-appo_basic-9040065",
+          "ood-appo_basic-9040066",
+          "ood-appo_basic-9040067",
+          "ood-appo_basic-9040068",
+          "ood-appo_basic-9040069",
+          "ood-appo_basic-9040070",
+          "ood-appo_basic-9040071",
+          "ood-appo_basic-9040072",
+          "ood-appo_basic-9040073",
+          "ood-appo_basic-9040074",
+          "ood-appo_basic-9040075",
+          "ood-appo_basic-9040076",
+          "ood-appo_basic-9040077",
+          "ood-appo_basic-9040078",
+          "ood-appo_basic-9040079",
+          "ood-appo_basic-9040080",
+          "ood-appo_basic-9040081",
+          "ood-appo_basic-9040082",
+          "ood-appo_basic-9040083",
+          "ood-appo_basic-9040084",
+          "ood-appo_basic-9040085",
+          "ood-appo_basic-9040086",
+          "ood-appo_basic-9040088",
+          "ood-appo_basic-9040089",
+          "ood-appo_basic-9040090",
+          "ood-appo_basic-9040091",
+          "ood-appo_basic-9040092",
+          "ood-appo_basic-9040093",
+          "ood-appo_basic-9040094",
+          "ood-appo_basic-9040095",
+          "ood-appo_basic-9040096",
+          "ood-appo_basic-9040097",
+          "ood-appo_basic-9040098",
+          "ood-appo_basic-9040099",
+          "ood-appo_basic-9040100",
+          "ood-appo_basic-9040101",
+          "ood-appo_basic-9040102",
+          "ood-appo_basic-9040103",
+          "ood-appo_basic-9040104",
+          "ood-appo_basic-9040105",
+          "ood-appo_basic-9040106",
+          "ood-appo_basic-9040107",
+          "ood-appo_basic-9040108",
+          "ood-appo_basic-9040109",
+          "ood-appo_basic-9040110",
+          "ood-appo_basic-9040111",
+          "ood-appo_basic-9040112",
+          "ood-appo_basic-9040113",
+          "ood-appo_basic-9040114",
+          "ood-appo_basic-9040115",
+          "ood-appo_basic-9040116",
+          "ood-appo_basic-9040118",
+          "ood-appo_basic-9040119",
+          "ood-appo_basic-9040120",
+          "ood-appo_basic-9040121",
+          "ood-appo_basic-9040122",
+          "ood-appo_basic-9040123",
+          "ood-appo_basic-9040124",
+          "ood-appo_basic-9040125",
+          "ood-appo_basic-9040126"
+        ]
+      },
+      "ood/predict_position": {
+        "n": 128,
+        "wins": 0,
+        "losses": 10,
+        "mcnemar_p": 0.001953125,
+        "win_case_ids": [],
+        "loss_case_ids": [
+          "ood-sonic_predict_position-9300773",
+          "ood-sonic_predict_position-9300775",
+          "ood-sonic_predict_position-9300776",
+          "ood-sonic_predict_position-9300782",
+          "ood-sonic_predict_position-9300812",
+          "ood-sonic_predict_position-9300815",
+          "ood-sonic_predict_position-9300817",
+          "ood-sonic_predict_position-9300843",
+          "ood-sonic_predict_position-9300870",
+          "ood-sonic_predict_position-9300881"
+        ]
+      }
+    },
+    "vcdm_macro_delta_vs_jev": {
+      "test": -0.5421874999999999,
+      "ood": -0.42942708333333335
+    }
+  },
+  "nanojev_rerun_fidelity": {
+    "description": "Our re-execution of the public NanoJev weights (sha256 f68c47d6...) through our harness. Not bit-exact: torch 2.10 lacks torch._native.triton_utils (their runs used --disable-native-triton) and batching differs; closed-loop chaos amplifies bf16-level score drift.",
+    "transitions_verified": 15721,
+    "macro": {
+      "test": 0.5721354166666667,
+      "ood": 0.39010416666666664
+    },
+    "cells": {
+      "test/maze": {
+        "successes": 4,
+        "n": 10
+      },
+      "test/snake": {
+        "successes": 7,
+        "n": 8
+      },
+      "test/basic": {
+        "successes": 90,
+        "n": 128
+      },
+      "test/predict_position": {
+        "successes": 23,
+        "n": 128
+      },
+      "ood/maze": {
+        "successes": 1,
+        "n": 10
+      },
+      "ood/snake": {
+        "successes": 5,
+        "n": 8
+      },
+      "ood/basic": {
+        "successes": 108,
+        "n": 128
+      },
+      "ood/predict_position": {
+        "successes": 6,
+        "n": 128
+      }
+    },
+    "decision0_argmax_agreement": 0.7372262773722628,
+    "episode_outcome_match": 0.8102189781021898,
+    "frozen_macro": {
+      "test": 0.6685,
+      "ood": 0.4547
+    }
+  },
+  "reverse_systemone_test": {
+    "description": "NanoJev public weights on our probability-mechanism test split (8145 rows), choice->choice / noul->boolean adapter.",
+    "nanojev": {
+      "n": 8145,
+      "accuracy": 0.3852670349907919,
+      "nll": 1.1387564622012107,
+      "brier": 0.509990679657663,
+      "tv": 0.4634181138493939,
+      "ece10": 0.2813268989800236
+    },
+    "nanojev_paired_consistency": {
+      "n_pairs": 2170,
+      "mean_abs_diff": 0.3738736621906749
+    },
+    "nanojev_by_mechanism": {
+      "arithmetic/simple": {
+        "n": 613,
+        "accuracy": 0.3295269168026101,
+        "nll": 1.3083755711236358,
+        "brier": 0.8029072595119088,
+        "tv": 0.6428342124182871,
+        "ece10": 0.28604888298577624
+      },
+      "coin/simple": {
+        "n": 1151,
+        "accuracy": 0.3631624674196351,
+        "nll": 1.0219062566886665,
+        "brier": 0.3968132215227092,
+        "tv": 0.3843210744473284,
+        "ece10": 0.3429088209449054
+      },
+      "comparison/simple": {
+        "n": 606,
+        "accuracy": 0.5676567656765676,
+        "nll": 0.8322554361075163,
+        "brier": 0.5974857066911661,
+        "tv": 0.45488745274126724,
+        "ece10": 0.22071855050502437
+      },
+      "date/simple": {
+        "n": 615,
+        "accuracy": 0.21788617886178863,
+        "nll": 1.424001319040128,
+        "brier": 0.7720283312041585,
+        "tv": 0.749836217387905,
+        "ece10": 0.12627579143376855
+      },
+      "die/simple": {
+        "n": 1130,
+        "accuracy": 0.40353982300884955,
+        "nll": 1.183621547931591,
+        "brier": 0.31148954617602465,
+        "tv": 0.34832704513276047,
+        "ece10": 0.2400954172806402
+      },
+      "lottery/simple": {
+        "n": 860,
+        "accuracy": 0.4313953488372093,
+        "nll": 1.087339042750902,
+        "brier": 0.3679096745633279,
+        "tv": 0.36793131008311064,
+        "ece10": 0.318522832750581
+      },
+      "membership/simple": {
+        "n": 603,
+        "accuracy": 0.33167495854063017,
+        "nll": 1.4221492914072118,
+        "brier": 0.8351707912203091,
+        "tv": 0.6386162571201277,
+        "ece10": 0.34204945393264985
+      },
+      "spinner/simple": {
+        "n": 885,
+        "accuracy": 0.4429378531073446,
+        "nll": 1.0062656188920394,
+        "brier": 0.32141059832044383,
+        "tv": 0.3418344188229007,
+        "ece10": 0.28678807471431583
+      },
+      "string/simple": {
+        "n": 603,
+        "accuracy": 0.3582089552238806,
+        "nll": 1.2345739549665309,
+        "brier": 0.7816620818393345,
+        "tv": 0.6222476357251258,
+        "ece10": 0.28421687506522314
+      },
+      "urn/enumerative": {
+        "n": 622,
+        "accuracy": 0.3954983922829582,
+        "nll": 0.9910933178193699,
+        "brier": 0.47577115598353553,
+        "tv": 0.4246851246312883,
+        "ece10": 0.3461130045809546
+      },
+      "urn/simple": {
+        "n": 457,
+        "accuracy": 0.3479212253829322,
+        "nll": 1.1711209905812725,
+        "brier": 0.3159133206108005,
+        "tv": 0.35953942037450404,
+        "ece10": 0.34625642487465425
+      }
+    },
+    "vcdm_reference": {
+      "dev": {
+        "n": 7829,
+        "accuracy": 0.8983267339379231,
+        "nll": 0.4978261326312606,
+        "brier": 0.07333635679399332,
+        "tv": 0.0832931012307204,
+        "ece10": 0.11740429840743093
+      },
+      "test": {
+        "n": 8145,
+        "accuracy": 0.8957642725598527,
+        "nll": 0.5042389009762257,
+        "brier": 0.07420999565062994,
+        "tv": 0.08219986067901648,
+        "ece10": 0.11339144628789985
+      },
+      "ood": {
+        "n": 8896,
+        "accuracy": 0.7186375899280576,
+        "nll": 0.6619121291942262,
+        "brier": 0.05762698341146119,
+        "tv": 0.12047015637596534,
+        "ece10": 0.06295701312847611
+      }
+    }
+  },
+  "p2_mixed_domain": {
+    "description": "VCDM v2: one Qwen3-0.6B scoring-head model trained 2000 steps on 1:1 mix of systemone probability tasks and NanoJev soft game decisions, from scratch.",
+    "probability_domain_v2": {
+      "dev": {
+        "n": 7829,
+        "accuracy": 0.8817218035509005,
+        "nll": 0.5206093822393734,
+        "brier": 0.08494436919007163,
+        "tv": 0.09856170924587075,
+        "ece10": 0.11234950077520023
+      },
+      "test": {
+        "n": 8145,
+        "accuracy": 0.8810313075506445,
+        "nll": 0.5249962598544112,
+        "brier": 0.08741055633593206,
+        "tv": 0.09868438373181315,
+        "ece10": 0.11065512702481889
+      },
+      "ood": {
+        "n": 8896,
+        "accuracy": 0.6424235611510791,
+        "nll": 0.7003124889761893,
+        "brier": 0.08501574187858876,
+        "tv": 0.13748910613451196,
+        "ece10": 0.09474833254792842
+      }
+    },
+    "probability_domain_v1_reference": {
+      "dev": {
+        "n": 7829,
+        "accuracy": 0.8983267339379231,
+        "nll": 0.4978261326312606,
+        "brier": 0.07333635679399332,
+        "tv": 0.0832931012307204,
+        "ece10": 0.11740429840743093
+      },
+      "test": {
+        "n": 8145,
+        "accuracy": 0.8957642725598527,
+        "nll": 0.5042389009762257,
+        "brier": 0.07420999565062994,
+        "tv": 0.08219986067901648,
+        "ece10": 0.11339144628789985
+      },
+      "ood": {
+        "n": 8896,
+        "accuracy": 0.7186375899280576,
+        "nll": 0.6619121291942262,
+        "brier": 0.05762698341146119,
+        "tv": 0.12047015637596534,
+        "ece10": 0.06295701312847611
+      }
+    },
+    "frozen_cohort_v2": {
+      "macro": {
+        "test": 0.48776041666666664,
+        "ood": 0.2872395833333333
+      },
+      "cells": {
+        "test/maze": {
+          "successes": 6,
+          "n": 10
+        },
+        "test/snake": {
+          "successes": 5,
+          "n": 8
+        },
+        "test/basic": {
+          "successes": 51,
+          "n": 128
+        },
+        "test/predict_position": {
+          "successes": 10,
+          "n": 128
+        },
+        "ood/maze": {
+          "successes": 1,
+          "n": 10
+        },
+        "ood/snake": {
+          "successes": 4,
+          "n": 8
+        },
+        "ood/basic": {
+          "successes": 52,
+          "n": 128
+        },
+        "ood/predict_position": {
+          "successes": 15,
+          "n": 128
+        }
+      },
+      "transitions_verified": 21856,
+      "paired_vs_jev": {
+        "test/maze": {
+          "n": 10,
+          "wins": 1,
+          "losses": 2,
+          "mcnemar_p": 1.0,
+          "win_case_ids": [
+            "test-maze16-7830001"
+          ],
+          "loss_case_ids": [
+            "test-maze16-7830000",
+            "test-maze8-308040"
+          ]
+        },
+        "test/snake": {
+          "n": 8,
+          "wins": 0,
+          "losses": 3,
+          "mcnemar_p": 0.25,
+          "win_case_ids": [],
+          "loss_case_ids": [
+            "test-snake12-7832000",
+            "test-snake12-7832001",
+            "test-snake8-318004"
+          ]
+        },
+        "test/basic": {
+          "n": 128,
+          "wins": 20,
+          "losses": 25,
+          "mcnemar_p": 0.5514843298025198,
+          "win_case_ids": [
+            "test-appo_basic-9030001",
+            "test-appo_basic-9030002",
+            "test-appo_basic-9030005",
+            "test-appo_basic-9030009",
+            "test-appo_basic-9030012",
+            "test-appo_basic-9030028",
+            "test-appo_basic-9030045",
+            "test-appo_basic-9030047",
+            "test-appo_basic-9030051",
+            "test-appo_basic-9030053",
+            "test-appo_basic-9030066",
+            "test-appo_basic-9030079",
+            "test-appo_basic-9030084",
+            "test-appo_basic-9030085",
+            "test-appo_basic-9030087",
+            "test-appo_basic-9030115",
+            "test-appo_basic-9030116",
+            "test-appo_basic-9030118",
+            "test-appo_basic-9030124",
+            "test-appo_basic-9030126"
+          ],
+          "loss_case_ids": [
+            "test-appo_basic-9030007",
+            "test-appo_basic-9030013",
+            "test-appo_basic-9030014",
+            "test-appo_basic-9030016",
+            "test-appo_basic-9030022",
+            "test-appo_basic-9030025",
+            "test-appo_basic-9030031",
+            "test-appo_basic-9030038",
+            "test-appo_basic-9030039",
+            "test-appo_basic-9030049",
+            "test-appo_basic-9030050",
+            "test-appo_basic-9030061",
+            "test-appo_basic-9030065",
+            "test-appo_basic-9030078",
+            "test-appo_basic-9030080",
+            "test-appo_basic-9030083",
+            "test-appo_basic-9030086",
+            "test-appo_basic-9030090",
+            "test-appo_basic-9030092",
+            "test-appo_basic-9030093",
+            "test-appo_basic-9030096",
+            "test-appo_basic-9030106",
+            "test-appo_basic-9030107",
+            "test-appo_basic-9030112",
+            "test-appo_basic-9030127"
+          ]
+        },
+        "test/predict_position": {
+          "n": 128,
+          "wins": 7,
+          "losses": 8,
+          "mcnemar_p": 1.0,
+          "win_case_ids": [
+            "test-sonic_predict_position-9300654",
+            "test-sonic_predict_position-9300696",
+            "test-sonic_predict_position-9300697",
+            "test-sonic_predict_position-9300706",
+            "test-sonic_predict_position-9300713",
+            "test-sonic_predict_position-9300728",
+            "test-sonic_predict_position-9300737"
+          ],
+          "loss_case_ids": [
+            "test-sonic_predict_position-9300644",
+            "test-sonic_predict_position-9300655",
+            "test-sonic_predict_position-9300678",
+            "test-sonic_predict_position-9300687",
+            "test-sonic_predict_position-9300714",
+            "test-sonic_predict_position-9300721",
+            "test-sonic_predict_position-9300727",
+            "test-sonic_predict_position-9300748"
+          ]
+        },
+        "ood/maze": {
+          "n": 10,
+          "wins": 0,
+          "losses": 2,
+          "mcnemar_p": 0.5,
+          "win_case_ids": [],
+          "loss_case_ids": [
+            "ood-maze16-7840001",
+            "ood-maze8-408004"
+          ]
+        },
+        "ood/snake": {
+          "n": 8,
+          "wins": 0,
+          "losses": 2,
+          "mcnemar_p": 0.5,
+          "win_case_ids": [],
+          "loss_case_ids": [
+            "ood-snake12-7842000",
+            "ood-snake8-418001"
+          ]
+        },
+        "ood/basic": {
+          "n": 128,
+          "wins": 24,
+          "losses": 31,
+          "mcnemar_p": 0.41875418826901556,
+          "win_case_ids": [
+            "ood-appo_basic-9040002",
+            "ood-appo_basic-9040005",
+            "ood-appo_basic-9040006",
+            "ood-appo_basic-9040019",
+            "ood-appo_basic-9040024",
+            "ood-appo_basic-9040029",
+            "ood-appo_basic-9040031",
+            "ood-appo_basic-9040033",
+            "ood-appo_basic-9040036",
+            "ood-appo_basic-9040038",
+            "ood-appo_basic-9040044",
+            "ood-appo_basic-9040053",
+            "ood-appo_basic-9040060",
+            "ood-appo_basic-9040061",
+            "ood-appo_basic-9040066",
+            "ood-appo_basic-9040068",
+            "ood-appo_basic-9040083",
+            "ood-appo_basic-9040087",
+            "ood-appo_basic-9040102",
+            "ood-appo_basic-9040103",
+            "ood-appo_basic-9040114",
+            "ood-appo_basic-9040115",
+            "ood-appo_basic-9040117",
+            "ood-appo_basic-9040118"
+          ],
+          "loss_case_ids": [
+            "ood-appo_basic-9040010",
+            "ood-appo_basic-9040012",
+            "ood-appo_basic-9040016",
+            "ood-appo_basic-9040018",
+            "ood-appo_basic-9040025",
+            "ood-appo_basic-9040027",
+            "ood-appo_basic-9040035",
+            "ood-appo_basic-9040046",
+            "ood-appo_basic-9040047",
+            "ood-appo_basic-9040048",
+            "ood-appo_basic-9040054",
+            "ood-appo_basic-9040058",
+            "ood-appo_basic-9040063",
+            "ood-appo_basic-9040065",
+            "ood-appo_basic-9040069",
+            "ood-appo_basic-9040070",
+            "ood-appo_basic-9040073",
+            "ood-appo_basic-9040074",
+            "ood-appo_basic-9040075",
+            "ood-appo_basic-9040077",
+            "ood-appo_basic-9040081",
+            "ood-appo_basic-9040082",
+            "ood-appo_basic-9040099",
+            "ood-appo_basic-9040101",
+            "ood-appo_basic-9040105",
+            "ood-appo_basic-9040107",
+            "ood-appo_basic-9040108",
+            "ood-appo_basic-9040109",
+            "ood-appo_basic-9040112",
+            "ood-appo_basic-9040119",
+            "ood-appo_basic-9040121"
+          ]
+        },
+        "ood/predict_position": {
+          "n": 128,
+          "wins": 13,
+          "losses": 6,
+          "mcnemar_p": 0.1670684814453125,
+          "win_case_ids": [
+            "ood-sonic_predict_position-9300772",
+            "ood-sonic_predict_position-9300773",
+            "ood-sonic_predict_position-9300786",
+            "ood-sonic_predict_position-9300804",
+            "ood-sonic_predict_position-9300806",
+            "ood-sonic_predict_position-9300814",
+            "ood-sonic_predict_position-9300837",
+            "ood-sonic_predict_position-9300855",
+            "ood-sonic_predict_position-9300876",
+            "ood-sonic_predict_position-9300878",
+            "ood-sonic_predict_position-9300880",
+            "ood-sonic_predict_position-9300889",
+            "ood-sonic_predict_position-9300890"
+          ],
+          "loss_case_ids": [
+            "ood-sonic_predict_position-9300790",
+            "ood-sonic_predict_position-9300793",
+            "ood-sonic_predict_position-9300811",
+            "ood-sonic_predict_position-9300825",
+            "ood-sonic_predict_position-9300844",
+            "ood-sonic_predict_position-9300861"
+          ]
+        }
+      },
+      "paired_vs_nanojev": {
+        "test/maze": {
+          "n": 10,
+          "wins": 2,
+          "losses": 0,
+          "mcnemar_p": 0.5,
+          "win_case_ids": [
+            "test-maze16-7830001",
+            "test-maze8-308053"
+          ],
+          "loss_case_ids": []
+        },
+        "test/snake": {
+          "n": 8,
+          "wins": 0,
+          "losses": 3,
+          "mcnemar_p": 0.25,
+          "win_case_ids": [],
+          "loss_case_ids": [
+            "test-snake12-7832000",
+            "test-snake12-7832001",
+            "test-snake8-318004"
+          ]
+        },
+        "test/basic": {
+          "n": 128,
+          "wins": 0,
+          "losses": 77,
+          "mcnemar_p": 1.3234889800848443e-23,
+          "win_case_ids": [],
+          "loss_case_ids": [
+            "test-appo_basic-9030000",
+            "test-appo_basic-9030003",
+            "test-appo_basic-9030007",
+            "test-appo_basic-9030010",
+            "test-appo_basic-9030011",
+            "test-appo_basic-9030013",
+            "test-appo_basic-9030014",
+            "test-appo_basic-9030015",
+            "test-appo_basic-9030016",
+            "test-appo_basic-9030017",
+            "test-appo_basic-9030018",
+            "test-appo_basic-9030019",
+            "test-appo_basic-9030020",
+            "test-appo_basic-9030021",
+            "test-appo_basic-9030022",
+            "test-appo_basic-9030023",
+            "test-appo_basic-9030025",
+            "test-appo_basic-9030027",
+            "test-appo_basic-9030029",
+            "test-appo_basic-9030030",
+            "test-appo_basic-9030031",
+            "test-appo_basic-9030032",
+            "test-appo_basic-9030033",
+            "test-appo_basic-9030035",
+            "test-appo_basic-9030038",
+            "test-appo_basic-9030039",
+            "test-appo_basic-9030041",
+            "test-appo_basic-9030043",
+            "test-appo_basic-9030044",
+            "test-appo_basic-9030046",
+            "test-appo_basic-9030048",
+            "test-appo_basic-9030049",
+            "test-appo_basic-9030050",
+            "test-appo_basic-9030052",
+            "test-appo_basic-9030054",
+            "test-appo_basic-9030055",
+            "test-appo_basic-9030056",
+            "test-appo_basic-9030057",
+            "test-appo_basic-9030059",
+            "test-appo_basic-9030060",
+            "test-appo_basic-9030061",
+            "test-appo_basic-9030064",
+            "test-appo_basic-9030065",
+            "test-appo_basic-9030069",
+            "test-appo_basic-9030070",
+            "test-appo_basic-9030071",
+            "test-appo_basic-9030073",
+            "test-appo_basic-9030074",
+            "test-appo_basic-9030075",
+            "test-appo_basic-9030076",
+            "test-appo_basic-9030078",
+            "test-appo_basic-9030080",
+            "test-appo_basic-9030081",
+            "test-appo_basic-9030082",
+            "test-appo_basic-9030083",
+            "test-appo_basic-9030086",
+            "test-appo_basic-9030089",
+            "test-appo_basic-9030090",
+            "test-appo_basic-9030091",
+            "test-appo_basic-9030092",
+            "test-appo_basic-9030093",
+            "test-appo_basic-9030094",
+            "test-appo_basic-9030096",
+            "test-appo_basic-9030097",
+            "test-appo_basic-9030098",
+            "test-appo_basic-9030099",
+            "test-appo_basic-9030102",
+            "test-appo_basic-9030103",
+            "test-appo_basic-9030105",
+            "test-appo_basic-9030106",
+            "test-appo_basic-9030107",
+            "test-appo_basic-9030110",
+            "test-appo_basic-9030112",
+            "test-appo_basic-9030117",
+            "test-appo_basic-9030121",
+            "test-appo_basic-9030125",
+            "test-appo_basic-9030127"
+          ]
+        },
+        "test/predict_position": {
+          "n": 128,
+          "wins": 7,
+          "losses": 24,
+          "mcnemar_p": 0.003326892852783203,
+          "win_case_ids": [
+            "test-sonic_predict_position-9300654",
+            "test-sonic_predict_position-9300672",
+            "test-sonic_predict_position-9300696",
+            "test-sonic_predict_position-9300697",
+            "test-sonic_predict_position-9300706",
+            "test-sonic_predict_position-9300713",
+            "test-sonic_predict_position-9300737"
+          ],
+          "loss_case_ids": [
+            "test-sonic_predict_position-9300641",
+            "test-sonic_predict_position-9300645",
+            "test-sonic_predict_position-9300647",
+            "test-sonic_predict_position-9300657",
+            "test-sonic_predict_position-9300666",
+            "test-sonic_predict_position-9300667",
+            "test-sonic_predict_position-9300673",
+            "test-sonic_predict_position-9300677",
+            "test-sonic_predict_position-9300679",
+            "test-sonic_predict_position-9300683",
+            "test-sonic_predict_position-9300690",
+            "test-sonic_predict_position-9300692",
+            "test-sonic_predict_position-9300693",
+            "test-sonic_predict_position-9300699",
+            "test-sonic_predict_position-9300717",
+            "test-sonic_predict_position-9300720",
+            "test-sonic_predict_position-9300722",
+            "test-sonic_predict_position-9300725",
+            "test-sonic_predict_position-9300730",
+            "test-sonic_predict_position-9300738",
+            "test-sonic_predict_position-9300747",
+            "test-sonic_predict_position-9300753",
+            "test-sonic_predict_position-9300755",
+            "test-sonic_predict_position-9300766"
+          ]
+        },
+        "ood/maze": {
+          "n": 10,
+          "wins": 0,
+          "losses": 1,
+          "mcnemar_p": 1.0,
+          "win_case_ids": [],
+          "loss_case_ids": [
+            "ood-maze8-408004"
+          ]
+        },
+        "ood/snake": {
+          "n": 8,
+          "wins": 0,
+          "losses": 1,
+          "mcnemar_p": 1.0,
+          "win_case_ids": [],
+          "loss_case_ids": [
+            "ood-snake8-418001"
+          ]
+        },
+        "ood/basic": {
+          "n": 128,
+          "wins": 0,
+          "losses": 76,
+          "mcnemar_p": 2.6469779601696886e-23,
+          "win_case_ids": [],
+          "loss_case_ids": [
+            "ood-appo_basic-9040000",
+            "ood-appo_basic-9040001",
+            "ood-appo_basic-9040003",
+            "ood-appo_basic-9040004",
+            "ood-appo_basic-9040008",
+            "ood-appo_basic-9040010",
+            "ood-appo_basic-9040011",
+            "ood-appo_basic-9040012",
+            "ood-appo_basic-9040013",
+            "ood-appo_basic-9040014",
+            "ood-appo_basic-9040016",
+            "ood-appo_basic-9040018",
+            "ood-appo_basic-9040022",
+            "ood-appo_basic-9040023",
+            "ood-appo_basic-9040025",
+            "ood-appo_basic-9040026",
+            "ood-appo_basic-9040027",
+            "ood-appo_basic-9040030",
+            "ood-appo_basic-9040032",
+            "ood-appo_basic-9040035",
+            "ood-appo_basic-9040039",
+            "ood-appo_basic-9040040",
+            "ood-appo_basic-9040041",
+            "ood-appo_basic-9040042",
+            "ood-appo_basic-9040045",
+            "ood-appo_basic-9040046",
+            "ood-appo_basic-9040047",
+            "ood-appo_basic-9040048",
+            "ood-appo_basic-9040050",
+            "ood-appo_basic-9040051",
+            "ood-appo_basic-9040052",
+            "ood-appo_basic-9040054",
+            "ood-appo_basic-9040056",
+            "ood-appo_basic-9040057",
+            "ood-appo_basic-9040058",
+            "ood-appo_basic-9040059",
+            "ood-appo_basic-9040063",
+            "ood-appo_basic-9040064",
+            "ood-appo_basic-9040065",
+            "ood-appo_basic-9040067",
+            "ood-appo_basic-9040069",
+            "ood-appo_basic-9040070",
+            "ood-appo_basic-9040071",
+            "ood-appo_basic-9040073",
+            "ood-appo_basic-9040074",
+            "ood-appo_basic-9040075",
+            "ood-appo_basic-9040076",
+            "ood-appo_basic-9040077",
+            "ood-appo_basic-9040078",
+            "ood-appo_basic-9040079",
+            "ood-appo_basic-9040081",
+            "ood-appo_basic-9040082",
+            "ood-appo_basic-9040086",
+            "ood-appo_basic-9040090",
+            "ood-appo_basic-9040091",
+            "ood-appo_basic-9040092",
+            "ood-appo_basic-9040093",
+            "ood-appo_basic-9040094",
+            "ood-appo_basic-9040095",
+            "ood-appo_basic-9040097",
+            "ood-appo_basic-9040099",
+            "ood-appo_basic-9040100",
+            "ood-appo_basic-9040101",
+            "ood-appo_basic-9040104",
+            "ood-appo_basic-9040105",
+            "ood-appo_basic-9040107",
+            "ood-appo_basic-9040108",
+            "ood-appo_basic-9040109",
+            "ood-appo_basic-9040111",
+            "ood-appo_basic-9040112",
+            "ood-appo_basic-9040116",
+            "ood-appo_basic-9040119",
+            "ood-appo_basic-9040121",
+            "ood-appo_basic-9040123",
+            "ood-appo_basic-9040124",
+            "ood-appo_basic-9040126"
+          ]
+        },
+        "ood/predict_position": {
+          "n": 128,
+          "wins": 14,
+          "losses": 9,
+          "mcnemar_p": 0.4048728942871094,
+          "win_case_ids": [
+            "ood-sonic_predict_position-9300772",
+            "ood-sonic_predict_position-9300786",
+            "ood-sonic_predict_position-9300787",
+            "ood-sonic_predict_position-9300804",
+            "ood-sonic_predict_position-9300806",
+            "ood-sonic_predict_position-9300814",
+            "ood-sonic_predict_position-9300837",
+            "ood-sonic_predict_position-9300855",
+            "ood-sonic_predict_position-9300876",
+            "ood-sonic_predict_position-9300878",
+            "ood-sonic_predict_position-9300880",
+            "ood-sonic_predict_position-9300884",
+            "ood-sonic_predict_position-9300889",
+            "ood-sonic_predict_position-9300890"
+          ],
+          "loss_case_ids": [
+            "ood-sonic_predict_position-9300775",
+            "ood-sonic_predict_position-9300776",
+            "ood-sonic_predict_position-9300782",
+            "ood-sonic_predict_position-9300812",
+            "ood-sonic_predict_position-9300815",
+            "ood-sonic_predict_position-9300817",
+            "ood-sonic_predict_position-9300843",
+            "ood-sonic_predict_position-9300870",
+            "ood-sonic_predict_position-9300881"
+          ]
+        }
+      },
+      "macro_reference": {
+        "nanojev": {
+          "test": 0.6684895833333333,
+          "ood": 0.45468749999999997
+        },
+        "jev": {
+          "test": 0.6539062499999999,
+          "ood": 0.43723958333333335
+        },
+        "native_qwen": {
+          "test": 0.15390625,
+          "ood": 0.12187499999999998
+        }
+      },
+      "v1_macro_reference": {
+        "test": 0.1117,
+        "ood": 0.0078
+      }
+    },
+    "criterion_check": {
+      "probability_test_acc_above_untuned_0.4965": true,
+      "frozen_test_macro_above_untuned_0.1539": true,
+      "frozen_ood_macro_above_untuned_0.1219": true
+    }
+  },
+  "latency_bench": {
+    "device": "NVIDIA GeForce RTX 3090",
+    "torch": "2.10.0+cu128",
+    "parameter_storage": "float32",
+    "forward_autocast": "bfloat16",
+    "single_scope": "tokenize + forward + group softmax, one question at a time, warm",
+    "nanojev_a100_reference": {
+      "gpu": "A100-SXM4-80GB",
+      "p50_ms": 84.72,
+      "questions_per_second": 283,
+      "scope": "8 states, 24 questions, 68 candidate paths, <=85 tokens, warm forward only"
+    },
+    "engines": {
+      "vcdm_v2": {
+        "single_probability": {
+          "p50_ms": 45.91,
+          "p95_ms": 50.25,
+          "mean_ms": 45.88,
+          "questions_per_second_from_p50": 21.8,
+          "n": 100
+        },
+        "single_game": {
+          "p50_ms": 84.75,
+          "p95_ms": 124.88,
+          "mean_ms": 95.09,
+          "questions_per_second_from_p50": 11.8,
+          "n": 100
+        },
+        "batch24_probability": {
+          "end_to_end": {
+            "p50_ms": 454.5,
+            "p95_ms": 468.11,
+            "mean_ms": 454.33,
+            "questions_per_second_from_p50": 52.8
+          },
+          "n_questions": 24,
+          "n_candidate_paths": 66,
+          "forward_only": {
+            "p50_ms": 422.91,
+            "p95_ms": 439.99,
+            "mean_ms": 424.99,
+            "questions_per_second_from_p50": 56.7,
+            "n_candidate_paths": 66,
+            "max_path_tokens": 191
+          }
+        },
+        "batch24_game": {
+          "end_to_end": {
+            "p50_ms": 2393.51,
+            "p95_ms": 2421.51,
+            "mean_ms": 2394.33,
+            "questions_per_second_from_p50": 10.0
+          },
+          "n_questions": 24,
+          "n_candidate_paths": 96,
+          "forward_only": {
+            "p50_ms": 2339.44,
+            "p95_ms": 2356.15,
+            "mean_ms": 2331.77,
+            "questions_per_second_from_p50": 10.3,
+            "n_candidate_paths": 96,
+            "max_path_tokens": 650
+          }
+        }
+      },
+      "vcdm_v1": {
+        "single_probability": {
+          "p50_ms": 47.56,
+          "p95_ms": 50.22,
+          "mean_ms": 48.09,
+          "questions_per_second_from_p50": 21.0,
+          "n": 100
+        },
+        "single_game": {
+          "p50_ms": 83.48,
+          "p95_ms": 123.9,
+          "mean_ms": 95.82,
+          "questions_per_second_from_p50": 12.0,
+          "n": 100
+        },
+        "batch24_probability": {
+          "end_to_end": {
+            "p50_ms": 457.42,
+            "p95_ms": 467.91,
+            "mean_ms": 456.75,
+            "questions_per_second_from_p50": 52.5
+          },
+          "n_questions": 24,
+          "n_candidate_paths": 66,
+          "forward_only": {
+            "p50_ms": 430.49,
+            "p95_ms": 438.04,
+            "mean_ms": 431.43,
+            "questions_per_second_from_p50": 55.8,
+            "n_candidate_paths": 66,
+            "max_path_tokens": 191
+          }
+        },
+        "batch24_game": {
+          "end_to_end": {
+            "p50_ms": 2384.38,
+            "p95_ms": 2428.67,
+            "mean_ms": 2387.03,
+            "questions_per_second_from_p50": 10.1
+          },
+          "n_questions": 24,
+          "n_candidate_paths": 96,
+          "forward_only": {
+            "p50_ms": 2350.48,
+            "p95_ms": 2371.57,
+            "mean_ms": 2350.32,
+            "questions_per_second_from_p50": 10.2,
+            "n_candidate_paths": 96,
+            "max_path_tokens": 650
+          }
+        }
+      },
+      "nanojev": {
+        "single_probability": {
+          "p50_ms": 56.68,
+          "p95_ms": 79.33,
+          "mean_ms": 60.42,
+          "questions_per_second_from_p50": 17.6,
+          "n": 100
+        },
+        "single_game": {
+          "p50_ms": 84.46,
+          "p95_ms": 115.61,
+          "mean_ms": 92.99,
+          "questions_per_second_from_p50": 11.8,
+          "n": 100
+        },
+        "batch24_probability": {
+          "end_to_end": {
+            "p50_ms": 284.55,
+            "p95_ms": 295.0,
+            "mean_ms": 284.74,
+            "questions_per_second_from_p50": 84.3
+          },
+          "n_questions": 24,
+          "n_candidate_paths": 66
+        },
+        "batch24_game": {
+          "end_to_end": {
+            "p50_ms": 2039.28,
+            "p95_ms": 2071.15,
+            "mean_ms": 2032.35,
+            "questions_per_second_from_p50": 11.8
+          },
+          "n_questions": 24,
+          "n_candidate_paths": 96
+        }
+      }
+    }
+  }
+}

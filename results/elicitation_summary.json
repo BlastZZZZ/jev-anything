@@ -1,0 +1,108 @@
+[
+ {
+  "case": "coin",
+  "method": "answer_words",
+  "err": 0.44180326079775956,
+  "detail": {
+   "Heads": 0.9418032607977596,
+   "Tails": 0.05819673920224042
+  }
+ },
+ {
+  "case": "coin",
+  "method": "labels_permavg",
+  "err": 0.2106823767243385,
+  "detail": {
+   "Heads": 0.7106823767243385,
+   "Tails": 0.2893176232756615
+  }
+ },
+ {
+  "case": "coin",
+  "method": "verbalized_p_heads",
+  "err": 0.0,
+  "detail": {
+   "p_heads": 0.5
+  }
+ },
+ {
+  "case": "coin",
+  "method": "sampling_freq",
+  "err": 0.45999999999999996,
+  "detail": {
+   "Heads": 0.96,
+   "Tails": 0.04
+  }
+ },
+ {
+  "case": "coin70",
+  "method": "answer_words",
+  "err": 0.2978575808952312,
+  "detail": {
+   "Heads": 0.9978575808952311,
+   "Tails": 0.0021424191047689036
+  }
+ },
+ {
+  "case": "coin70",
+  "method": "labels_permavg",
+  "err": 0.2828020106335164,
+  "detail": {
+   "Heads": 0.9828020106335164,
+   "Tails": 0.017197989366483608
+  }
+ },
+ {
+  "case": "coin70",
+  "method": "verbalized_p_heads",
+  "err": 0.0,
+  "detail": {
+   "p_heads": 0.7
+  }
+ },
+ {
+  "case": "coin70",
+  "method": "sampling_freq",
+  "err": 0.30000000000000004,
+  "detail": {
+   "Heads": 1.0,
+   "Tails": 0.0
+  }
+ },
+ {
+  "case": "lottery_k5",
+  "method": "answer_words",
+  "err": 0.6053251395443372,
+  "detail": {
+   "Ball number 1": 0.8053251395443373,
+   "Ball number 2": 0.0058082487513555735,
+   "Ball number 3": 0.16974193001643245,
+   "Ball number 4": 0.005445464851710596,
+   "Ball number 5": 0.013679216836164177
+  }
+ },
+ {
+  "case": "lottery_k5",
+  "method": "labels_permavg",
+  "err": 0.25408966144631484,
+  "detail": {
+   "Ball number 1": 0.4540896614463148,
+   "Ball number 2": 0.12907047485601247,
+   "Ball number 3": 0.1675035410373517,
+   "Ball number 4": 0.10938611345845853,
+   "Ball number 5": 0.13995020920186244
+  }
+ },
+ {
+  "case": "lottery_k5",
+  "method": "sampling_freq",
+  "err": 0.4,
+  "detail": {
+   "Ball number 1": 0.36,
+   "Ball number 2": 0.0,
+   "Ball number 3": 0.3,
+   "Ball number 4": 0.34,
+   "Ball number 5": 0.0
+  }
+ }
+]

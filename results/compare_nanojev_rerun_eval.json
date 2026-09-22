@@ -1,0 +1,43 @@
+{
+  "transitions_verified": 15721,
+  "macro": {
+    "test": 0.5721354166666667,
+    "ood": 0.39010416666666664
+  },
+  "cells": {
+    "test/maze": {
+      "successes": 4,
+      "n": 10
+    },
+    "test/snake": {
+      "successes": 7,
+      "n": 8
+    },
+    "test/basic": {
+      "successes": 90,
+      "n": 128
+    },
+    "test/predict_position": {
+      "successes": 23,
+      "n": 128
+    },
+    "ood/maze": {
+      "successes": 1,
+      "n": 10
+    },
+    "ood/snake": {
+      "successes": 5,
+      "n": 8
+    },
+    "ood/basic": {
+      "successes": 108,
+      "n": 128
+    },
+    "ood/predict_position": {
+      "successes": 6,
+      "n": 128
+    }
+  },
+  "decision0_argmax_agreement": 0.7372262773722628,
+  "episode_outcome_match": 0.8102189781021898
+}

@@ -1,0 +1,155 @@
+{
+  "device": "NVIDIA GeForce RTX 3090",
+  "torch": "2.10.0+cu128",
+  "parameter_storage": "float32",
+  "forward_autocast": "bfloat16",
+  "single_scope": "tokenize + forward + group softmax, one question at a time, warm",
+  "nanojev_a100_reference": {
+    "gpu": "A100-SXM4-80GB",
+    "p50_ms": 84.72,
+    "questions_per_second": 283,
+    "scope": "8 states, 24 questions, 68 candidate paths, <=85 tokens, warm forward only"
+  },
+  "engines": {
+    "vcdm_v2": {
+      "single_probability": {
+        "p50_ms": 45.91,
+        "p95_ms": 50.25,
+        "mean_ms": 45.88,
+        "questions_per_second_from_p50": 21.8,
+        "n": 100
+      },
+      "single_game": {
+        "p50_ms": 84.75,
+        "p95_ms": 124.88,
+        "mean_ms": 95.09,
+        "questions_per_second_from_p50": 11.8,
+        "n": 100
+      },
+      "batch24_probability": {
+        "end_to_end": {
+          "p50_ms": 454.5,
+          "p95_ms": 468.11,
+          "mean_ms": 454.33,
+          "questions_per_second_from_p50": 52.8
+        },
+        "n_questions": 24,
+        "n_candidate_paths": 66,
+        "forward_only": {
+          "p50_ms": 422.91,
+          "p95_ms": 439.99,
+          "mean_ms": 424.99,
+          "questions_per_second_from_p50": 56.7,
+          "n_candidate_paths": 66,
+          "max_path_tokens": 191
+        }
+      },
+      "batch24_game": {
+        "end_to_end": {
+          "p50_ms": 2393.51,
+          "p95_ms": 2421.51,
+          "mean_ms": 2394.33,
+          "questions_per_second_from_p50": 10.0
+        },
+        "n_questions": 24,
+        "n_candidate_paths": 96,
+        "forward_only": {
+          "p50_ms": 2339.44,
+          "p95_ms": 2356.15,
+          "mean_ms": 2331.77,
+          "questions_per_second_from_p50": 10.3,
+          "n_candidate_paths": 96,
+          "max_path_tokens": 650
+        }
+      }
+    },
+    "vcdm_v1": {
+      "single_probability": {
+        "p50_ms": 47.56,
+        "p95_ms": 50.22,
+        "mean_ms": 48.09,
+        "questions_per_second_from_p50": 21.0,
+        "n": 100
+      },
+      "single_game": {
+        "p50_ms": 83.48,
+        "p95_ms": 123.9,
+        "mean_ms": 95.82,
+        "questions_per_second_from_p50": 12.0,
+        "n": 100
+      },
+      "batch24_probability": {
+        "end_to_end": {
+          "p50_ms": 457.42,
+          "p95_ms": 467.91,
+          "mean_ms": 456.75,
+          "questions_per_second_from_p50": 52.5
+        },
+        "n_questions": 24,
+        "n_candidate_paths": 66,
+        "forward_only": {
+          "p50_ms": 430.49,
+          "p95_ms": 438.04,
+          "mean_ms": 431.43,
+          "questions_per_second_from_p50": 55.8,
+          "n_candidate_paths": 66,
+          "max_path_tokens": 191
+        }
+      },
+      "batch24_game": {
+        "end_to_end": {
+          "p50_ms": 2384.38,
+          "p95_ms": 2428.67,
+          "mean_ms": 2387.03,
+          "questions_per_second_from_p50": 10.1
+        },
+        "n_questions": 24,
+        "n_candidate_paths": 96,
+        "forward_only": {
+          "p50_ms": 2350.48,
+          "p95_ms": 2371.57,
+          "mean_ms": 2350.32,
+          "questions_per_second_from_p50": 10.2,
+          "n_candidate_paths": 96,
+          "max_path_tokens": 650
+        }
+      }
+    },
+    "nanojev": {
+      "single_probability": {
+        "p50_ms": 56.68,
+        "p95_ms": 79.33,
+        "mean_ms": 60.42,
+        "questions_per_second_from_p50": 17.6,
+        "n": 100
+      },
+      "single_game": {
+        "p50_ms": 84.46,
+        "p95_ms": 115.61,
+        "mean_ms": 92.99,
+        "questions_per_second_from_p50": 11.8,
+        "n": 100
+      },
+      "batch24_probability": {
+        "end_to_end": {
+          "p50_ms": 284.55,
+          "p95_ms": 295.0,
+          "mean_ms": 284.74,
+          "questions_per_second_from_p50": 84.3
+        },
+        "n_questions": 24,
+        "n_candidate_paths": 66
+      },
+      "batch24_game": {
+        "end_to_end": {
+          "p50_ms": 2039.28,
+          "p95_ms": 2071.15,
+          "mean_ms": 2032.35,
+          "questions_per_second_from_p50": 11.8
+        },
+        "n_questions": 24,
+        "n_candidate_paths": 96
+      }
+    }
+  }
+}

@@ -1,0 +1,324 @@
+{
+  "cases_sha256": "d00f5b6aeaa9f2aac3e4b5010b31df4e86f77674cb588e17bc3f7d853e4a1f36",
+  "runs": {
+    "selected": {
+      "transitions_verified": 11948,
+      "macro": {
+        "test": 0.6684895833333333,
+        "ood": 0.45468749999999997
+      },
+      "published_macro": {
+        "test": 0.6685,
+        "ood": 0.4547
+      },
+      "macro_matches_published": {
+        "test": true,
+        "ood": true
+      },
+      "cells": {
+        "test/maze": {
+          "recomputed": [
+            4,
+            10
+          ],
+          "published": [
+            4,
+            10
+          ],
+          "match": true
+        },
+        "test/snake": {
+          "recomputed": [
+            8,
+            8
+          ],
+          "published": [
+            8,
+            8
+          ],
+          "match": true
+        },
+        "test/basic": {
+          "recomputed": [
+            128,
+            128
+          ],
+          "published": [
+            128,
+            128
+          ],
+          "match": true
+        },
+        "test/predict_position": {
+          "recomputed": [
+            27,
+            128
+          ],
+          "published": [
+            27,
+            128
+          ],
+          "match": true
+        },
+        "ood/maze": {
+          "recomputed": [
+            2,
+            10
+          ],
+          "published": [
+            2,
+            10
+          ],
+          "match": true
+        },
+        "ood/snake": {
+          "recomputed": [
+            5,
+            8
+          ],
+          "published": [
+            5,
+            8
+          ],
+          "match": true
+        },
+        "ood/basic": {
+          "recomputed": [
+            128,
+            128
+          ],
+          "published": [
+            128,
+            128
+          ],
+          "match": true
+        },
+        "ood/predict_position": {
+          "recomputed": [
+            10,
+            128
+          ],
+          "published": [
+            10,
+            128
+          ],
+          "match": true
+        }
+      },
+      "all_cells_match_published": true
+    },
+    "jev": {
+      "transitions_verified": 19934,
+      "macro": {
+        "test": 0.6539062499999999,
+        "ood": 0.43723958333333335
+      },
+      "published_macro": {
+        "test": 0.6539,
+        "ood": 0.4372
+      },
+      "macro_matches_published": {
+        "test": true,
+        "ood": true
+      },
+      "cells": {
+        "test/maze": {
+          "recomputed": [
+            7,
+            10
+          ],
+          "published": [
+            7,
+            10
+          ],
+          "match": true
+        },
+        "test/snake": {
+          "recomputed": [
+            8,
+            8
+          ],
+          "published": [
+            8,
+            8
+          ],
+          "match": true
+        },
+        "test/basic": {
+          "recomputed": [
+            56,
+            128
+          ],
+          "published": [
+            56,
+            128
+          ],
+          "match": true
+        },
+        "test/predict_position": {
+          "recomputed": [
+            11,
+            128
+          ],
+          "published": [
+            11,
+            128
+          ],
+          "match": true
+        },
+        "ood/maze": {
+          "recomputed": [
+            3,
+            10
+          ],
+          "published": [
+            3,
+            10
+          ],
+          "match": true
+        },
+        "ood/snake": {
+          "recomputed": [
+            6,
+            8
+          ],
+          "published": [
+            6,
+            8
+          ],
+          "match": true
+        },
+        "ood/basic": {
+          "recomputed": [
+            59,
+            128
+          ],
+          "published": [
+            59,
+            128
+          ],
+          "match": true
+        },
+        "ood/predict_position": {
+          "recomputed": [
+            8,
+            128
+          ],
+          "published": [
+            8,
+            128
+          ],
+          "match": true
+        }
+      },
+      "all_cells_match_published": true
+    },
+    "native": {
+      "transitions_verified": 19818,
+      "macro": {
+        "test": 0.15390625,
+        "ood": 0.12187499999999998
+      },
+      "published_macro": {
+        "test": 0.1539,
+        "ood": 0.1219
+      },
+      "macro_matches_published": {
+        "test": true,
+        "ood": true
+      },
+      "cells": {
+        "test/maze": {
+          "recomputed": [
+            2,
+            10
+          ],
+          "published": [
+            2,
+            10
+          ],
+          "match": true
+        },
+        "test/snake": {
+          "recomputed": [
+            0,
+            8
+          ],
+          "published": [
+            0,
+            8
+          ],
+          "match": true
+        },
+        "test/basic": {
+          "recomputed": [
+            56,
+            128
+          ],
+          "published": [
+            56,
+            128
+          ],
+          "match": true
+        },
+        "test/predict_position": {
+          "recomputed": [
+            11,
+            128
+          ],
+          "published": [
+            11,
+            128
+          ],
+          "match": true
+        },
+        "ood/maze": {
+          "recomputed": [
+            1,
+            10
+          ],
+          "published": [
+            1,
+            10
+          ],
+          "match": true
+        },
+        "ood/snake": {
+          "recomputed": [
+            0,
+            8
+          ],
+          "published": [
+            0,
+            8
+          ],
+          "match": true
+        },
+        "ood/basic": {
+          "recomputed": [
+            59,
+            128
+          ],
+          "published": [
+            59,
+            128
+          ],
+          "match": true
+        },
+        "ood/predict_position": {
+          "recomputed": [
+            9,
+            128
+          ],
+          "published": [
+            9,
+            128
+          ],
+          "match": true
+        }
+      },
+      "all_cells_match_published": true
+    }
+  },
+  "passed": true
+}

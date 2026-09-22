@@ -1,0 +1,9 @@
+# Core (probes, data generation, training, evaluation)
+torch>=2.9          # developed on 2.10.0+cu128
+transformers>=4.57  # developed on 4.57.6
+httpx>=0.28         # zero-shot probes against a local vLLM server
+pytest>=8.0         # data/test_datagen.py
+
+# Optional — only needed for the game-domain comparison rollouts
+# (NanoJev's ViZDoom basic / predict_position environments):
+# vizdoom>=1.2

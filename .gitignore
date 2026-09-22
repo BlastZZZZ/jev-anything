@@ -1,0 +1,28 @@
+# Checkpoints are hosted on HuggingFace, not in git
+ckpt/
+nanojev_ckpt/
+
+# Full datasets are regenerated / downloaded, not committed
+# (100-line samples under data/samples/ ARE committed)
+data/*.jsonl
+!data/samples/
+
+# Rollout trajectories and per-row predictions are too large for git
+results/trajectories/
+results/*episodes*.jsonl
+results/*episodes*.manifest.json
+results/*.preds.jsonl
+results/journal*.jsonl
+results/*.stdout
+results/train_log*.jsonl
+results/train_v*.log
+results/*.log
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local tooling caches
+.pip-cache/
+.venv/
