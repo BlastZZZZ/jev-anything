@@ -1,5 +1,11 @@
 # xiaojev（小 Jev）
 
+一个 0.6B 模型，直接输出校准的概率分布——无需文本生成。
+
+我们发现 LLM 存在一个本质的**知行差距（knowing–saying gap）**：大模型能用语言准确说出概率，但其原生 token 概率通道却系统性地失校准。
+
+xiaojev 提供一个专用的概率接口，绕开语言生成，直接预测校准的分布。
+
 **开源、校准的 System One 式决策模型。** 输入 state + 动态候选集，一次前向直接输出候选上的完整概率分布——只做选择，不生成文本。可以理解为一个小型、开源、可本地运行的 [Choice 原语](https://docs.typesafe.ai/primitives/choice) 替代品，用程序真值监督而非教师模仿来获得校准。
 
 [English README](README.md) · [完整结果](docs/RESULTS.md)

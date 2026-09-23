@@ -1,5 +1,11 @@
 # xiaojev
 
+A 0.6B model that directly outputs calibrated probability distributions — no text generation required.
+
+We discover a fundamental **knowing–saying gap** in LLMs: large models can verbalize probabilities accurately, but their native token probability channel is systematically miscalibrated.
+
+xiaojev provides a dedicated probabilistic interface that bypasses language generation and predicts calibrated distributions directly.
+
 **Open, calibrated System One-style decision models.** Give xiaojev a state
 plus a dynamic candidate set, and a single forward pass returns a full
 probability distribution over the candidates — it *chooses*, it does not
