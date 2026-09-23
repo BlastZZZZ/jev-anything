@@ -61,8 +61,8 @@ def predict_zero_shot(tok, rows, device, batch_questions=8):
             prompts.append(p)
             label_ids.append(lids)
         tokens, mask, lengths = collate(prompts, tok.pad_token_id, device)
-        logits = model(input_ids=tokens, attention_mask=mask).logits
-        last = logits[torch.arange(len(chunk), device=device), lengths - 1].float()
+        hidden = model.model(input_ids=tokens, attention_mask=mask).last_hidden_state
+        last = model.lm_head(hidden[torch.arange(len(chunk), device=device), lengths - 1]).float()
         for j, row in enumerate(chunk):
             z = last[j, torch.tensor(label_ids[j], device=device)]
             preds[row["id"]] = F.softmax(z, dim=-1).cpu()

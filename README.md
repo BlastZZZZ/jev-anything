@@ -11,21 +11,27 @@ calibrated by programmatic ground truth instead of teacher imitation.
 
 ## Headline numbers
 
-| | **xiaojev v2** (0.6B) | Jev (closed API) | NanoJev (open) | Zero-shot Qwen3-0.6B |
+Current checkpoint: **v3** (three domains). v2 figures are kept in
+[docs/RESULTS.md](docs/RESULTS.md).
+
+| | **xiaojev v3** (0.6B) | Jev (closed API) | NanoJev (open) | Zero-shot Qwen3-0.6B |
 |---|---|---|---|---|
-| Probability test TV ↓ | **0.099** | miscalibrated (fair coin → 0.89–0.95) | 0.463 | 0.471 |
-| Probability test acc ↑ | **0.881** | — | 0.385 | 0.497 |
-| Cross-primitive consistency ↓ | **0.027** | ~0.4 Choice-vs-Noul gap | 0.374 | 0.754 |
-| Game macro success (test / ood) | **48.8% / 28.7%** | 65.4% / 43.7% | 66.8% / 45.5% | 15.4% / 12.2% |
-| vs Jev on games (paired McNemar) | all 8 cells **p > 0.16** | — | — | — |
+| Semantic test acc ↑ (RAG decisions, n=2384) | **0.860** | — | — | 0.482 |
+| Probability test acc ↑ / TV ↓ | **0.880 / 0.105** | miscalibrated (fair coin → 0.89–0.95) | 0.385 / 0.463 | 0.497 / 0.471 |
+| Probability OOD acc ↑ (unseen mechanisms) | **0.753** | — | — | 0.569 |
+| Cross-primitive consistency ↓ | **0.029** | ~0.4 Choice-vs-Noul gap | 0.374 | 0.754 |
+| Game macro success (test / ood) | 42.2% / 15.8% | 65.4% / 43.7% | 66.8% / 45.5% | 15.4% / 12.2% |
 | Latency, single decision | **46–85 ms** (1× RTX 3090) | network API call | 57–84 ms (same GPU) | — |
 | Cost per decision | **$0 (local)** | paid API | $0 (local) | $0 (local) |
 
-v2 is one model that is simultaneously far better calibrated than Jev in the
-probability domain and statistically indistinguishable from it on the game
-cohort. Details and every intermediate number: [docs/RESULTS.md](docs/RESULTS.md).
+v3 is one 0.6B model that beats the zero-shot base by 30–45 points on RAG-style
+semantic decisions, stays far better calibrated than Jev on probabilities, and
+remains well above the base on games — the three-domain mix dilutes the game
+score relative to v2 (48.8% → 42.2% test macro), an honest tradeoff we report
+rather than hide. Details and every intermediate number:
+[docs/RESULTS.md](docs/RESULTS.md).
 
-## Why this exists — five findings
+## Why this exists — six findings
 
 **1. The knowing–saying gap.** A general LLM (Qwen3.8-27B) is nearly perfectly
 calibrated when it *verbalizes* probabilities in natural language — mean
@@ -71,7 +77,21 @@ domains at once: probability acc **0.881** vs 0.497, game macro **48.8%** vs
 15.4%. On games it is statistically indistinguishable from the Jev API
 (paired McNemar p > 0.16 in all eight split×category cells) and beats NanoJev
 on test Maze 6/10 vs 4/10 — all at **46–85 ms per single decision** on one
-RTX 3090, with probability-domain calibration far beyond Jev.
+RTX 3090, with probability-domain calibration far beyond Jev. v3 extends the
+mix to *three* domains (probability : game : semantic ≈ 0.34 : 0.33 : 0.33,
+2500 steps): semantic acc **0.860**, probability acc **0.880** held, and games
+stay far above base at 42.2% — diluted relative to v2's 48.8%, which is the
+honest price of covering a third domain with the same 0.6B capacity.
+
+**6. Zero-LLM-cost gold supervision unlocks the semantic domain.** RAG's core
+decisions — is this passage relevant? is the question answerable? is the
+context sufficient? which passage holds the evidence? — can be labeled for
+free from the *gold supporting facts* of existing QA datasets (HotpotQA /
+2WikiMultiHopQA / MuSiQue), no LLM calls involved. 24k such items
+(`data/make_semanticdata.py`, seed-pinned) lift the 0.6B model **30–45 points
+above its zero-shot base on every semantic mechanism** (passage relevance
+0.970 vs 0.520, evidence choice 0.864 vs 0.396, answerability 0.810 vs 0.512,
+sufficiency 0.795 vs 0.502) — directly usable as a RAG router/gate.
 
 ## Architecture
 
@@ -117,10 +137,17 @@ pytest data/test_datagen.py        # 11 self-consistency tests (brute-force orac
 huggingface-cli download C-Tianyu/NanoJev-Data --repo-type dataset --local-dir /path/to/NanoJev-Data
 export XIAOJEV_NANOJEV_DATA=/path/to/NanoJev-Data
 python data/make_gamedata.py       # -> data/games_v1.jsonl
+
+# Semantic decisions (v3): 24k rows from gold supporting facts of
+# HotpotQA / 2WikiMultiHopQA / MuSiQue — zero LLM calls, seed-pinned (20260922)
+export XIAOJEV_RAG_DATA=/path/to/rag_datasets   # hotpotqa/ 2wikimultihopqa/ musique/,
+                                                # each with raw/<name>.json + gold.jsonl + corpus.jsonl
+python data/make_semanticdata.py   # -> data/semantic_v1.jsonl
+pytest data/test_semanticdata.py   # truth mapping, split leakage, class balance, negatives
 ```
 
-100-row samples of both datasets are committed under `data/samples/` so the
-format can be inspected without downloading anything.
+100-row samples of all three datasets are committed under `data/samples/` so
+the format can be inspected without downloading anything.
 
 ### Train
 
@@ -128,10 +155,16 @@ format can be inspected without downloading anything.
 # v1 — probability specialist (1200 steps, ~6 h on one RTX 3090)
 python training/train.py --steps 1200 --out ckpt/v1
 
-# v2 — general System One: 1:1 probability + game mix (2000 steps, ~10 h)
+# v2 — two-domain System One: 1:1 probability + game mix (2000 steps, ~10 h)
 python training/train.py --steps 2000 --data data/train_v1.jsonl \
     --mix data/games_v1.jsonl --mix-ratio 0.5 \
     --out ckpt/v2 --log results/train_log_v2.jsonl
+
+# v3 — three-domain System One: weighted multi-source mix (2500 steps, ~12 h)
+python training/train.py --steps 2500 \
+    --mix data/train_v1.jsonl:0.34 --mix data/games_v1.jsonl:0.33 \
+    --mix data/semantic_v1.jsonl:0.33 \
+    --out ckpt/v3 --log results/train_log_v3.jsonl
 ```
 
 The backbone defaults to `Qwen/Qwen3-0.6B` (override with
@@ -141,9 +174,12 @@ The backbone defaults to `Qwen/Qwen3-0.6B` (override with
 ### Evaluate
 
 ```bash
-python training/evaluate.py --ckpt ckpt/v2 --split test --output results/eval_v2_test.json
-python training/evaluate.py --ckpt ckpt/v2 --split ood  --output results/eval_v2_ood.json
-python training/evaluate.py --zero-shot --split test --output results/eval_zeroshot_test.json
+python training/evaluate.py --ckpt ckpt/v3 --split test --output results/eval_v3_test.json
+python training/evaluate.py --ckpt ckpt/v3 --split ood  --output results/eval_v3_ood.json
+python training/evaluate.py --ckpt ckpt/v3 --split test --data data/semantic_v1.jsonl \
+    --output results/eval_v3_semantic_test.json
+python training/evaluate.py --zero-shot --split test --data data/semantic_v1.jsonl \
+    --output results/eval_zs_semantic_test.json
 ```
 
 Reports accuracy / NLL / Brier / ECE(10) / mean TV overall and per
@@ -170,10 +206,10 @@ export XIAOJEV_NANOJEV_REPO=/path/to/NanoJev        # clone of github.com/Tianyu
 export XIAOJEV_NANOJEV_DATA=/path/to/NanoJev-Data
 
 python comparison/compare_sanity.py      # re-verify NanoJev's published 548-case numbers
-python comparison/compare_rollout.py --engine vcdm --checkpoint ckpt/v2 \
-    --output results/compare_v2_frozen_episodes.jsonl
-python comparison/compare_report.py results/compare_v2_frozen_episodes.jsonl \
-    results/compare_v2_frozen.json
+python comparison/compare_rollout.py --engine vcdm --checkpoint ckpt/v3 \
+    --output results/compare_v3_frozen_episodes.jsonl
+python comparison/compare_report.py results/compare_v3_frozen_episodes.jsonl \
+    results/compare_v3_frozen.json
 python comparison/compare_reverse.py     # NanoJev weights on our probability test
 python comparison/latency_bench.py       # v1 / v2 / NanoJev latency (--skip-nanojev to skip)
 ```
@@ -181,6 +217,23 @@ python comparison/latency_bench.py       # v1 / v2 / NanoJev latency (--skip-nan
 (`vcdm` is the internal engine codename for the xiaojev checkpoints, kept for
 artifact compatibility. Game rollouts of the Doom scenarios additionally need
 `vizdoom`.)
+
+## Browser agent integration
+
+[`integrations/jev-ultrafast/`](integrations/jev-ultrafast/) plugs xiaojev into
+the [jev-ultrafast](https://github.com/browser-use/jev-ultrafast) browser agent
+as a drop-in local backend (`JEV_BACKEND=local`, checkpoint from
+`XIAOJEV_CKPT`; free-form text is delegated to a local OpenAI-compatible server
+via `TEXT_MODEL_*`). One forward pass per decision, TypeSafe-API-shaped
+responses, zero autoregressive decode steps.
+
+Current fixture status (**work in progress**): with v3, the first decision
+correctly picks the Destination input (probability 1.0) and the text helper
+produces "Lisbon" — but the agent re-fills the field 4 times instead of
+confirming the autocomplete suggestion and is stopped by the no-progress
+guard. Operation understanding: yes; web-interaction common sense: not yet —
+that is P4 browser-domain data work. Summary:
+[`results/fixture_v3_summary.json`](results/fixture_v3_summary.json).
 
 ## Full results
 
@@ -191,13 +244,14 @@ not committed.
 
 ## Checkpoints
 
-Two checkpoints (~14 GB total, including optimizer states):
+Three checkpoints (~21 GB total, including optimizer states):
 
 - `xiaojev-v1` — probability specialist (TV 0.082)
-- `xiaojev-v2` — general System One (probability + games)
+- `xiaojev-v2` — two-domain System One (probability + games; game macro 48.8%)
+- `xiaojev-v3` — three-domain System One (+ semantic/RAG decisions; semantic acc 0.860)
 
 > **TODO:** upload to HuggingFace — link placeholder `https://huggingface.co/TODO/xiaojev`.
-> Until then, both can be retrained from scratch with the commands above;
+> Until then, all three can be retrained from scratch with the commands above;
 > data generation is seed-pinned and the training seed defaults to 0.
 
 ## Requirements
@@ -209,16 +263,17 @@ Two checkpoints (~14 GB total, including optimizer states):
 
 ## Limitations
 
-- **Research prototype.** Two checkpoints, one GPU, one random seed; no
+- **Research prototype.** Three checkpoints, one GPU, one random seed; no
   extensive hyperparameter search.
 - **8K context.** States are truncated to fit an 8192-token budget.
-- **Domain coverage.** Trained on programmatic probability mechanisms and four
-  game tasks (Maze, Snake, Doom basic, Doom predict_position). Semantic
-  decision domains — browser-use, RAG, business choices — are *not* trained
-  or evaluated; calibration there is unknown.
+- **Domain coverage.** Trained on programmatic probability mechanisms, four
+  game tasks (Maze, Snake, Doom basic, Doom predict_position), and four
+  RAG-style semantic decision types built from QA gold labels. Browser-use and
+  other open-ended semantic domains are *not* trained; the browser-agent
+  integration is demonstrably not there yet (see fixture summary).
 - **Game supervision is teacher distillation** (Jev native_probs / visual
-  expert policy), not ground truth; only the probability domain has exact
-  analytic targets.
+  expert policy), not ground truth; probability and semantic domains have
+  exact targets (analytic / gold-label-derived).
 - **No affiliation with TypeSafe.** "Jev" is referenced solely as a benchmark
   via NanoJev's published artifacts and public API receipts; xiaojev is an
   independent re-implementation study.
@@ -229,9 +284,12 @@ Two checkpoints (~14 GB total, including optimizer states):
   data (NanoJev-Data), the frozen 548-case comparison protocol and verifier,
   and the Jev API receipts we benchmark against.
 - [jev-ultrafast](https://github.com/browser-use/jev-ultrafast) (MIT) —
-  browser-use domain reference point for System One-style decision models.
+  browser-use agent that xiaojev integrates with as a local decision backend
+  (`integrations/jev-ultrafast/`).
 - [Qwen3](https://huggingface.co/Qwen/Qwen3-0.6B) (Apache 2.0) — base
   backbone (0.6B); the 27B probe target is an AWQ community quant of Qwen3.8-27B.
+- HotpotQA, 2WikiMultiHopQA, MuSiQue — source QA datasets whose gold
+  supporting facts supervise the semantic domain (each under its own license).
 
 ## License
 

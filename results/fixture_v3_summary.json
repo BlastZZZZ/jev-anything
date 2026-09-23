@@ -1,0 +1,20 @@
+{
+  "description": "Browser-agent fixture: xiaojev as the local decision backend of jev-ultrafast (integrations/jev-ultrafast/), on its static travel fixture. Goal: 'Use the destination search and filters to find Design stays in Lisbon with Free cancellation, then open Casa Flora.' Raw run logs contain local machine paths and are not committed; this file is the hand-written summary.",
+  "fixture": "jev-ultrafast/scripts/smoke.py (fixture.html?scenario=travel), text helper = local 27B text model",
+  "runs": {
+    "v2": {
+      "successes": 0,
+      "n": 2,
+      "behavior": "loops on navigation actions; never reaches the destination form"
+    },
+    "v3": {
+      "successes": 0,
+      "n": 2,
+      "behavior": "first decision selects the Destination input box (probability 1.0); the 27B text helper correctly produces 'Lisbon'; but the agent then re-fills the same field 4 times in a row instead of clicking the autocomplete suggestion, and the no-progress guard marks the run blocked",
+      "actions_per_run": 4,
+      "status": "blocked"
+    }
+  },
+  "conclusion": "Qualitative step forward from v2 (correct operation choice and correct text), but the model lacks web-interaction common sense (autocomplete confirmation, filter toggles). Deferred to P4 browser-domain training data.",
+  "status": "work_in_progress"
+}

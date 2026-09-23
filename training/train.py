@@ -1,7 +1,12 @@
-"""xiaojev: train a calibrated decision model on programmatic probability data.
+"""xiaojev: train a calibrated decision model on programmatic decision data.
 
 Qwen3-0.6B backbone + LayerNorm + scalar head on the EOS-position hidden state
 of each (prompt, label, EOS) candidate path; per-question softmax + soft-label CE.
+
+--mix accepts repeated JSONL sources: a single unweighted PATH (mixed with the
+base data at --mix-ratio), or several weighted PATH:WEIGHT entries (weights are
+normalized and replace the base source set; use the base file explicitly to
+include it, e.g. --mix data/train_v1.jsonl:2 --mix data/games_v1.jsonl:1).
 
 Configuration (environment variables):
   XIAOJEV_BASE_MODEL  backbone path or HF id (default Qwen/Qwen3-0.6B)
@@ -215,12 +220,15 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--out", default=str(REPO_ROOT / "ckpt" / "v1"))
     ap.add_argument("--log", default=str(REPO_ROOT / "results" / "train_log.jsonl"))
-    ap.add_argument("--data", default=DATA_PATH, help="primary JSONL data source")
+    ap.add_argument("--data", default=DATA_PATH,
+                    help="base JSONL data source (used when --mix is unweighted or absent)")
     ap.add_argument("--resume", default=None)
     ap.add_argument("--save-every", type=int, default=0)
-    ap.add_argument("--mix", default=None, help="second JSONL data source (train split)")
+    ap.add_argument("--mix", action="append", default=None,
+                    help="JSONL data source, optionally 'PATH:WEIGHT'; repeatable. "
+                         "Weighted form replaces the default base source set.")
     ap.add_argument("--mix-ratio", type=float, default=0.5,
-                    help="fraction of each step's questions drawn from --mix")
+                    help="fraction of each step's questions drawn from --mix (single unweighted form)")
     ap.add_argument("--microbatch-tokens", type=int, default=32768)
     args = ap.parse_args()
 
@@ -230,12 +238,35 @@ def main():
     Path(args.log).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).mkdir(parents=True, exist_ok=True)
 
+    mixes = args.mix or []
+    if mixes and all(":" in m and m.rsplit(":", 1)[1].replace(".", "").isdigit() for m in mixes):
+        sources = []
+        for m in mixes:
+            path, w = m.rsplit(":", 1)
+            sources.append((path, float(w)))
+        total = sum(w for _, w in sources)
+        sources = [(p, w / total) for p, w in sources]
+    elif len(mixes) <= 1:
+        sources = [(args.data, 1.0 - (args.mix_ratio if mixes else 0.0))]
+        if mixes:
+            sources.append((mixes[0], args.mix_ratio))
+    else:
+        ap.error("mix entries must be either all weighted (PATH:W) or a single unweighted PATH")
+
     tok = AutoTokenizer.from_pretrained(MODEL_PATH)
-    rows = load_rows("train", args.data)
-    print(f"train rows: {len(rows)}")
-    mix_rows = load_rows("train", args.mix) if args.mix else None
-    if mix_rows:
-        print(f"mix rows: {len(mix_rows)} (ratio {args.mix_ratio})")
+    source_rows = []
+    for path, w in sources:
+        r = load_rows("train", path)
+        source_rows.append(r)
+        print(f"source {path}: {len(r)} rows, weight {w:.3f}")
+
+    def step_counts():
+        raw = [w * args.batch_questions for _, w in sources]
+        counts = [int(x) for x in raw]
+        for i in sorted(range(len(raw)), key=lambda i: -(raw[i] - counts[i]))[
+                : args.batch_questions - sum(counts)]:
+            counts[i] += 1
+        return counts
 
     model = StudentModel().to(device)
     model.backbone.gradient_checkpointing_enable(
@@ -264,13 +295,10 @@ def main():
     log_f = open(args.log, "a")
     for step in range(start_step, args.steps):
         t0 = time.perf_counter()
-        if mix_rows:
-            n_mix = round(args.batch_questions * args.mix_ratio)
-            batch = random.sample(rows, args.batch_questions - n_mix) + random.sample(mix_rows, n_mix)
-            domains = [0] * (args.batch_questions - n_mix) + [1] * n_mix
-        else:
-            batch = random.sample(rows, args.batch_questions)
-            domains = [0] * args.batch_questions
+        batch, domains = [], []
+        for si, n in enumerate(step_counts()):
+            batch.extend(random.sample(source_rows[si], n))
+            domains.extend([si] * n)
         paths, sizes, targets = [], [], []
         row_slices = []
         for row in batch:
@@ -319,8 +347,7 @@ def main():
             "step": step + 1,
             "loss": round(sum(ce_vals) / len(ce_vals) + args.brier_mu * brier_sum / len(batch), 5),
             "ce": round(sum(ce_vals) / len(ce_vals), 5),
-            "ce_prob": round(ce_by_domain.get(0, float("nan")), 5),
-            "ce_game": round(ce_by_domain.get(1, float("nan")), 5),
+            **{f"ce_src{d}": round(ce_by_domain[d], 5) for d in sorted(ce_by_domain)},
             "brier": round(brier_sum / len(batch), 5),
             "lr_backbone": scheduler.get_last_lr()[0],
             "lr_head": scheduler.get_last_lr()[1],

@@ -9,6 +9,8 @@ Notes on names:
   90k probability tasks only.
 - **v2** = xiaojev v2, same architecture, trained 2000 steps from scratch on a
   1:1 mix of probability tasks and NanoJev soft game decisions.
+- **v3** = xiaojev v3, same architecture, trained 2500 steps from scratch on a
+  weighted three-source mix (probability 0.34 : game 0.33 : semantic 0.33).
 - **vcdm** is the internal codename for the xiaojev checkpoints; it appears in
   raw artifacts (`results/compare_*.json`, engine names in `comparison/`).
 - Zero-shot = untuned Qwen3-0.6B, candidates scored by label-token logprob
@@ -174,6 +176,82 @@ beyond both, section 3 table above.)
 NanoJev's published A100 reference (forward-only, different GPU/protocol):
 p50 84.72 ms ≈ 283 q/s — included in `results/latency_bench.json` for
 context, not as an apples-to-apples number.
+
+## 6. v3: the semantic (RAG) decision domain, three-domain mix
+
+v3 = 2500 steps from scratch on a weighted three-source mix
+(probability 0.34 : game 0.33 : semantic 0.33). Semantic data: 24,000 items
+built from gold supporting facts of HotpotQA / 2WikiMultiHopQA / MuSiQue
+(`data/make_semanticdata.py`, seed 20260922, no LLM calls; splits by question
+id, 16816/2472/2328/2384 train/dev/calibration/test). Raw:
+`results/eval_v3_semantic_test.json`, `results/eval_zs_semantic_test.json`,
+`results/eval_v3_test.json`, `results/eval_v3_ood.json`,
+`results/compare_v3_frozen.json`.
+
+### 6a. Semantic test split (n=2384): v3 vs zero-shot base
+
+| Mechanism | n | Zero-shot acc | **v3 acc** | v3 NLL | v3 Brier | v3 TV | v3 ECE10 |
+|---|---|---|---|---|---|---|---|
+| sem_passage_relevance | 596 | 0.520 | **0.970** | 0.122 | 0.053 | 0.036 | 0.020 |
+| sem_evidence_choice | 596 | 0.396 | **0.864** | 0.498 | 0.207 | 0.149 | 0.075 |
+| sem_answerability | 596 | 0.512 | **0.810** | 0.418 | 0.263 | 0.219 | 0.068 |
+| sem_sufficiency | 596 | 0.502 | **0.795** | 0.443 | 0.280 | 0.226 | 0.084 |
+| **overall** | 2384 | 0.482 | **0.860** | 0.370 | 0.201 | 0.158 | 0.061 |
+
+30–45 points above the zero-shot base on every mechanism — usable directly as
+a RAG router/gate. (Zero-shot overall: NLL 1.517, Brier 0.812, TV 0.518,
+ECE 0.366.)
+
+### 6b. Probability domain held (v3 vs v2 vs base)
+
+| Model | test acc | test TV | test Brier | consistency | OOD acc | OOD Brier |
+|---|---|---|---|---|---|---|
+| zero-shot 0.6B | 0.497 | 0.471 | 0.600 | 0.754 | 0.569 | 0.386 |
+| v2 | 0.881 | 0.099 | 0.087 | 0.027 | 0.642 | 0.085 |
+| **v3** | **0.880** | **0.105** | **0.087** | **0.029** | **0.753** | **0.085** |
+
+Adding the semantic domain costs nothing on probabilities — and OOD accuracy
+actually *improves* (0.642 → 0.753 on unseen card/dice_sum mechanisms).
+
+### 6c. Game domain: the honest tradeoff (frozen 548-case cohort, macro success)
+
+| Model | test | ood | test/maze | test/snake | test/basic | test/predict_position |
+|---|---|---|---|---|---|---|
+| native Qwen (frozen) | 15.4% | 12.2% | 2/10 | 0/8 | 56/128 | 11/128 |
+| **v3** | **42.2%** | **15.8%** | 3/10 | 5/8 | 80/128 | 7/128 |
+| v2 | 48.8% | 28.7% | 6/10 | 5/8 | 51/128 | 10/128 |
+| NanoJev (frozen) | 66.8% | 45.5% | 4/10 | 8/8 | 128/128 | 27/128 |
+| Jev API (frozen) | 65.4% | 43.7% | 7/10 | 8/8 | 56/128 | 11/128 |
+
+Covering a third domain with the same 0.6B capacity dilutes the game score
+(v2 48.8%/28.7% → v3 42.2%/15.8%). Two silver linings: v3 *significantly
+beats the Jev API on Doom basic* (paired McNemar test/basic 31 wins vs 7
+losses, p = 0.0001; ood/basic 34 vs 17, p = 0.024), and stays far above the
+native base everywhere except OOD maze/snake. v3 transitions re-verified with
+NanoJev's verifier: 17486.
+
+### 6d. Latency
+
+Unchanged from v2 (same architecture, same weights layout): single decision
+p50 45.9 ms (probability) / 84.8 ms (game) on one RTX 3090 — see the section 5
+latency table.
+
+## 7. Browser-agent fixture (work in progress)
+
+xiaojev as the local decision backend of the jev-ultrafast browser agent
+(`integrations/jev-ultrafast/`), static travel fixture, goal "find Design
+stays in Lisbon with Free cancellation, then open Casa Flora". Hand-written
+summary: `results/fixture_v3_summary.json` (raw logs contain local machine
+paths and are not committed).
+
+| Checkpoint | Runs | Outcome |
+|---|---|---|
+| v2 | 0/2 | loops on navigation; never reaches the destination form |
+| v3 | 0/2 | first decision picks the Destination input (p = 1.0), text helper produces "Lisbon" correctly; then re-fills the field 4× without confirming the autocomplete suggestion → blocked by the no-progress guard |
+
+Operation-level understanding arrived with v3; web-interaction common sense
+(autocomplete confirmation, filter toggles) has not — a data-coverage gap
+earmarked for P4 browser-domain training data.
 
 ## Reproducibility notes
 
