@@ -1,8 +1,8 @@
-# xiaojev（小 Jev）
+# jev anything
 
 **面向浏览器操作、RAG、游戏和概率推理的轻量 0.6B 决策模型。**
 
-xiaojev 对动态候选集打分并返回概率分布，供应用选择动作、排序证据和评估不确定性。
+jev anything 对动态候选集打分并返回概率分布，供应用选择动作、排序证据和评估不确定性。
 模型可在单张 GPU 上本地运行，直接选择给定候选，无需自回归生成文本。
 
 - **浏览器操作**：为搜索、表单填写、筛选和导航选择操作及可见元素目标。
@@ -18,7 +18,7 @@ xiaojev 对动态候选集打分并返回概率分布，供应用选择动作、
 | 能力 | 评测 | 指标 |
 |---|---|---:|
 | 浏览器操作 | 本地酒店任务，独立核验最终页面 | **4/4** |
-| RAG 检索 | MuSiQue test R@5，101 题，dense + xiaojev 融合 | **77.31%** |
+| RAG 检索 | MuSiQue test R@5，101 题，dense + jev anything 融合 | **77.31%** |
 | RAG 问答流程 | MuSiQue test EM / F1，101 题，top-4 上下文 | **36.63% / 46.60%** |
 | 证据判断 | 语义 test 准确率，2,384 条决策 | **83.52%** |
 | 游戏策略 | test / OOD 加权宏平均成功率 | **53.26% / 26.72%** |
@@ -41,7 +41,7 @@ python -m rag_eval.evaluate_fusion --verify-calibration
 ## 研究背景
 
 通用语言模型的 token 概率可能与它用语言表达的概率估计存在明显差异。
-xiaojev 使用独立评分头和分布监督来学习决策接口：概率任务采用解析真值，
+jev anything 使用独立评分头和分布监督来学习决策接口：概率任务采用解析真值，
 语义与 RAG 任务采用 QA 金标，浏览器任务采用程序化交互标签，游戏任务采用教师或专家策略。
 相关探针、校准测量和训练实验保留在[研究报告](docs/RESULTS.md)中。
 
@@ -74,6 +74,8 @@ xiaojev 使用独立评分头和分布监督来学习决策接口：概率任务
 ## Quickstart
 
 ```bash
+git clone https://github.com/BlastZZZZ/jev-anything.git
+cd jev-anything
 pip install -r requirements.txt
 ```
 
@@ -154,12 +156,12 @@ python comparison/compare_report.py results/compare_v4_frozen_episodes.jsonl \
     results/compare_v4_frozen.json
 ```
 
-（`vcdm` 是 xiaojev checkpoint 的内部代号，为兼容产物文件而保留。Doom 场景的游戏 rollout 另需 `vizdoom`。）
+（`vcdm` 是 jev anything checkpoint 的内部代号，为兼容产物文件而保留。Doom 场景的游戏 rollout 另需 `vizdoom`。）
 
 ## 浏览器 agent 集成
 
 [`integrations/jev-ultrafast/`](integrations/jev-ultrafast/) 提供本地决策后端、固定上游版本的补丁和安装器。
-设置 `JEV_BACKEND=local` 后，xiaojev 根据可见控件及其状态选择操作和目标；
+设置 `JEV_BACKEND=local` 后，jev anything 根据可见控件及其状态选择操作和目标；
 独立的 OpenAI 兼容文本助手仅负责 `TYPE_TEXT` 填写值。候选通过有界微批次打分，零自回归解码。
 
 浏览器权重在两轮本地酒店验收中均完成 4/4，使用 5、5、5、4 个动作，
@@ -191,12 +193,12 @@ python comparison/compare_report.py results/compare_v4_frozen_episodes.jsonl \
 - **8K 上下文**：超出 8192 token 预算的 state 会被截断。
 - **域覆盖**：训练覆盖程序概率机制、四个游戏任务、QA 金标构造的语义决策、浏览器交互和难负例 RAG 决策。浏览器适配仅在本地 fixture 上验证，任意网站的可靠性尚未评测。
 - **游戏监督是教师蒸馏**（Jev native_probs / 视觉专家策略），不是真值；概率域与语义域有精确目标（解析解 / 金标推导）。
-- **与 TypeSafe 无任何关联**：Jev 仅作为基准出现（NanoJev 公开产物与公开 API 回执），xiaojev 是独立的复现研究。
+- **与 TypeSafe 无任何关联**：Jev 仅作为基准出现（NanoJev 公开产物与公开 API 回执），jev anything 是独立的复现研究。
 
 ## 致谢
 
 - [NanoJev](https://github.com/TianyuCodings/NanoJev)（MIT）——游戏训练数据（NanoJev-Data）、548 例冻结对比协议与验证器、Jev API 回执。
-- [jev-ultrafast](https://github.com/browser-use/jev-ultrafast)（MIT）——浏览器 agent，xiaojev 作为其本地决策后端接入（`integrations/jev-ultrafast/`）。
+- [jev-ultrafast](https://github.com/browser-use/jev-ultrafast)（MIT）——浏览器 agent，jev anything 作为其本地决策后端接入（`integrations/jev-ultrafast/`）。
 - [Qwen3](https://huggingface.co/Qwen/Qwen3-0.6B)（Apache 2.0）——基座（0.6B）；27B 探针目标为 Qwen3.8-27B 的社区 AWQ 量化。
 - HotpotQA、2WikiMultiHopQA、MuSiQue —— 语义域监督来源 QA 数据集（各自遵循其许可证）。
 

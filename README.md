@@ -1,8 +1,8 @@
-# xiaojev
+# jev anything
 
 **Lightweight 0.6B decision models for browser agents, RAG, games, and probabilistic reasoning.**
 
-xiaojev scores a dynamic set of candidates and returns a probability distribution
+jev anything scores a dynamic set of candidates and returns a probability distribution
 that applications can use to choose an action, rank evidence, or assess uncertainty.
 It runs locally on a single GPU and selects among supplied candidates without
 autoregressive text generation.
@@ -20,7 +20,7 @@ autoregressive text generation.
 | Capability | Evaluation | Result |
 |---|---|---:|
 | Browser actions | Local hotel tasks, independently checked final pages | **4/4** |
-| RAG retrieval | MuSiQue test R@5, 101 questions, dense + xiaojev fusion | **77.31%** |
+| RAG retrieval | MuSiQue test R@5, 101 questions, dense + jev anything fusion | **77.31%** |
 | RAG pipeline | MuSiQue test QA EM / F1, 101 questions, top-4 context | **36.63% / 46.60%** |
 | Evidence assessment | Semantic test accuracy, 2,384 decisions | **83.52%** |
 | Game policies | Weighted macro success, test / OOD | **53.26% / 26.72%** |
@@ -48,7 +48,7 @@ python -m rag_eval.evaluate_fusion --verify-calibration
 ## Research background
 
 Token probabilities from a general language model can differ substantially from
-its verbalized probability estimates. xiaojev uses a dedicated scoring head and
+its verbalized probability estimates. jev anything uses a dedicated scoring head and
 distribution supervision to learn a decision interface. Probability tasks use
 analytic targets, semantic and RAG tasks use QA gold labels, browser tasks use
 programmatic interaction labels, and game tasks use teacher or expert policies.
@@ -85,6 +85,8 @@ target distribution, computed per question after the group softmax.
 ## Quickstart
 
 ```bash
+git clone https://github.com/BlastZZZZ/jev-anything.git
+cd jev-anything
 pip install -r requirements.txt
 ```
 
@@ -169,7 +171,7 @@ python comparison/compare_report.py results/compare_v4_frozen_episodes.jsonl \
     results/compare_v4_frozen.json
 ```
 
-(`vcdm` is the internal engine codename for the xiaojev checkpoints, kept for
+(`vcdm` is the internal engine codename for the jev anything checkpoints, kept for
 artifact compatibility. Game rollouts of the Doom scenarios additionally need
 `vizdoom`.)
 
@@ -226,7 +228,7 @@ Use the browser checkpoint for the agent and v4 for the other evaluated domains.
   expert policy), not ground truth; probability and semantic domains have
   exact targets (analytic / gold-label-derived).
 - **No affiliation with TypeSafe.** "Jev" is referenced solely as a benchmark
-  via NanoJev's published artifacts and public API receipts; xiaojev is an
+  via NanoJev's published artifacts and public API receipts; jev anything is an
   independent re-implementation study.
 
 ## Attribution
@@ -235,7 +237,7 @@ Use the browser checkpoint for the agent and v4 for the other evaluated domains.
   data (NanoJev-Data), the frozen 548-case comparison protocol and verifier,
   and the Jev API receipts we benchmark against.
 - [jev-ultrafast](https://github.com/browser-use/jev-ultrafast) (MIT) —
-  browser-use agent that xiaojev integrates with as a local decision backend
+  browser-use agent that jev anything integrates with as a local decision backend
   (`integrations/jev-ultrafast/`).
 - [Qwen3](https://huggingface.co/Qwen/Qwen3-0.6B) (Apache 2.0) — base
   backbone (0.6B); the 27B probe target is an AWQ community quant of Qwen3.8-27B.

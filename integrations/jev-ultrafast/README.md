@@ -1,12 +1,12 @@
-# jev-ultrafast local xiaojev backend
+# jev anything backend for jev-ultrafast
 
-The adapter chooses operations and observed element indices with xiaojev. A separate OpenAI-compatible text helper supplies only `TYPE_TEXT` values. Decisions return the TypeSafe-compatible response shape with zero autoregressive decoding; large candidate sets may require multiple forward microbatches.
+The adapter chooses operations and observed element indices with jev anything. A separate OpenAI-compatible text helper supplies only `TYPE_TEXT` values. Decisions return the TypeSafe-compatible response shape with zero autoregressive decoding; large candidate sets may require multiple forward microbatches.
 
 The integration includes the state-serialization repair, shared training/inference request construction, and a progress guard that ignores transient DOM node identities. Copying `local_model.py` alone is insufficient: the dispatch and progress changes in `agent.patch` are also required.
 
 ## Install
 
-Run from the xiaojev repository root:
+Run from the jev anything repository root:
 
 ```bash
 git clone https://github.com/browser-use/jev-ultrafast.git ../jev-ultrafast

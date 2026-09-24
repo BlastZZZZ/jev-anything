@@ -1,4 +1,4 @@
-# Dense retrieval with xiaojev v4
+# Dense retrieval with jev anything v4
 
 The repair combines the dense retriever's order with the original v4 model's order. It uses weighted reciprocal-rank fusion, with dense weight 0.6, reranker weight 0.4, and rank constant 1. Parameters were selected on 98 calibration questions and frozen before evaluating dev/test.
 

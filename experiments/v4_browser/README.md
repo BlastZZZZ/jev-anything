@@ -1,6 +1,6 @@
 # Browser adaptation and local regression
 
-Install the [jev-ultrafast integration](../../integrations/jev-ultrafast/README.md) first. Commands below run from the xiaojev repository root, with the model dependencies installed and the fixture server and Chrome already running. The adaptation starts from the original `ckpt/v4` checkpoint.
+Install the [jev-ultrafast integration](../../integrations/jev-ultrafast/README.md) first. Commands below run from the jev anything repository root, with the model dependencies installed and the fixture server and Chrome already running. The adaptation starts from the original `ckpt/v4` checkpoint.
 
 Set `XIAOJEV_HOME` to this repository and `XIAOJEV_JEV_HOME` to the patched agent checkout. `XIAOJEV_BASE_MODEL` can point to a cached Qwen3-0.6B tokenizer/model. Select your assigned GPU through `CUDA_VISIBLE_DEVICES`; the scripts do not choose a physical GPU. Working data and logs default to `results/v4_browser` (`XIAOJEV_BROWSER_RUN` overrides it). The fixture URL defaults to `http://127.0.0.1:8766/fixture.html?scenario=travel` (`XIAOJEV_FIXTURE_URL` overrides it).
 

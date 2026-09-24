@@ -16,11 +16,12 @@ from pathlib import Path
 
 _ROOT_CANDIDATES = (
     Path(__file__).resolve().parents[2],
+    Path(__file__).resolve().parents[2] / "jev-anything",
     Path(__file__).resolve().parents[2] / "xiaojev",
 )
 _DEFAULT_HOME = next(
     (p for p in _ROOT_CANDIDATES if (p / "training/train.py").is_file()),
-    _ROOT_CANDIDATES[-1],
+    _ROOT_CANDIDATES[1],
 )
 _HOME = os.environ.get("XIAOJEV_HOME", str(_DEFAULT_HOME))
 _STATE_CHAR_CAP = 6000
