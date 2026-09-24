@@ -1,0 +1,234 @@
+diff --git a/jev_ultrafast/agent.py b/jev_ultrafast/agent.py
+index 726d880..d049453 100644
+--- a/jev_ultrafast/agent.py
++++ b/jev_ultrafast/agent.py
+@@ -1,6 +1,7 @@
+ """The complete agent loop. Typed choices, observable state, bounded execution."""
+ 
+ import base64
++import json
+ import time
+ from pathlib import Path
+ 
+@@ -9,6 +10,14 @@ from .model import action_space, choose, field_context, field_text
+ from .questions import MAX_STEPS
+ 
+ 
++def progress_signature(page):
++    fields = ("kind", "label", "role", "value", "current_value", "checked", "selected", "expanded")
++    return json.dumps({
++        "page": {k: page.get(k) for k in ("url", "title", "text")},
++        "actions": [{k: action[k] for k in fields if k in action} for action in page["actions"]],
++    }, sort_keys=True, ensure_ascii=False)
++
++
+ class Agent:
+     def __init__(self, url, goals, *, record_dir=None, screenshots=False):
+         task = goals.strip() if isinstance(goals, str) else "\n".join(goals).strip()
+@@ -143,6 +152,7 @@ class Agent:
+             state["elapsed_ms"] = round((time.perf_counter() - state["started_at"]) * 1000)
+             state["history"][-1].update(
+                 page_changed=state["page"]["fingerprint"] != page["fingerprint"],
++                progressed=progress_signature(state["page"]) != progress_signature(page),
+                 url=state["page"]["url"],
+                 elapsed_ms=state["elapsed_ms"],
+             )
+@@ -153,7 +163,9 @@ class Agent:
+             repeated = state["history"][-3:]
+             state["status"] = (
+                 "blocked"
+-                if len(repeated) == 3 and all(h["page_changed"] is False and h["kind"] != "wait" for h in repeated)
++                if len(repeated) == 3 and all(
++                    h.get("progressed", h["page_changed"]) is False and h["kind"] != "wait" for h in repeated
++                )
+                 else "ready"
+             )
+         else:
+diff --git a/jev_ultrafast/model.py b/jev_ultrafast/model.py
+index d311747..bf69705 100644
+--- a/jev_ultrafast/model.py
++++ b/jev_ultrafast/model.py
+@@ -78,7 +78,7 @@ def action_space(actions):
+     return elements, targets, controls
+ 
+ 
+-def choose(state, goal, history):
++def decision_request(state, goal, history):
+     elements, targets, controls = action_space(state["actions"])
+     labels = {
+         "CLICK": "Click an element, button, menu option, autocomplete suggestion, or calendar day.",
+@@ -110,13 +110,24 @@ def choose(state, goal, history):
+             "page": {k: state[k] for k in ("url", "title", "text")},
+             "elements": elements,
+             "recent_actions": [
+-                {k: h.get(k) for k in ("action", "kind", "text", "page_changed")} for h in history[-10:]
++                {k: h.get(k) for k in ("action", "kind", "text", "page_changed", "progressed")} for h in history[-10:]
+             ],
+         },
+         "questions": questions,
+     }
++    return body, targets, controls
++
++
++def choose(state, goal, history):
++    body, targets, controls = decision_request(state, goal, history)
++    operations = body["questions"]["operation"]["criteria"]
+     started = time.perf_counter()
+-    result = post_json("https://api.typesafe.ai/v1/systemone", os.environ["TYPESAFE_API_KEY"], body)
++    if os.environ.get("JEV_BACKEND") == "local":
++        from . import local_model
++
++        result = local_model.answer(body)
++    else:
++        result = post_json("https://api.typesafe.ai/v1/systemone", os.environ["TYPESAFE_API_KEY"], body)
+     operation_answer = validate_choice(result["answers"].get("operation", {}), operations)
+     operation = operation_answer["choice"]
+     target = None
+diff --git a/tests/test_agent.py b/tests/test_agent.py
+index 41fc390..3e39500 100644
+--- a/tests/test_agent.py
++++ b/tests/test_agent.py
+@@ -218,6 +218,20 @@ def test_loading_waits_do_not_trigger_no_progress_stop(runner):
+     assert len(runner.state["history"]) == 5 and runner.state["status"] == "ready"
+ 
+ 
++def test_rebuilding_unchanged_dom_does_not_keep_click_loop_alive(runner):
++    for i in range(3):
++        updated = deepcopy(runner.state["page"])
++        updated["actions"][2]["node"] += 100
++        updated["fingerprint"] = fingerprint(updated)
++        runner.state["browser"].observe.return_value = updated
++        runner.state["decision"] = decision("e3")
++        runner.command("act", {"fingerprint": runner.state["page"]["fingerprint"]})
++        assert runner.state["history"][-1]["page_changed"] is True
++        assert runner.state["history"][-1]["progressed"] is False
++    assert runner.state["status"] == "blocked"
++    assert runner.state["browser"].act.call_count == 3
++
++
+ def test_stale_observation_preserves_executed_action(runner):
+     runner.state["decision"] = decision("e3")
+     runner.state["browser"].observe.side_effect = StalePage("changed")
+--- /dev/null
++++ b/tests/test_local_format.py
+@@ -0,0 +1,44 @@
++from copy import deepcopy
++
++from jev_ultrafast.agent import progress_signature
++from jev_ultrafast.local_model import _state_text, question_row
++
++
++def test_visible_control_state_and_history_survive_serialization():
++    state = {
++        "page": {"title": "Search", "url": "https://example.test/", "text": "Results"},
++        "elements": [
++            {"index": "1", "label": "Accessible", "role": "checkbox", "operations": ["CLICK"],
++             "checked": False, "value": "on"},
++            {"index": "2", "label": "Category", "role": "combobox", "operations": ["SELECT"],
++             "value": "Any", "options": [{"index": "2:1", "label": "Category → Nature", "value": "Nature"}]},
++        ],
++        "recent_actions": [{"kind": "fill", "action": "Destination", "text": "Bergen", "progressed": False}],
++    }
++    text = _state_text(state)
++    assert "checked=false" in text
++    assert "Nature" in text and "2:1" in text
++    assert '"text": "Bergen"' in text and '"progressed": false' in text
++    changed = deepcopy(state)
++    changed["elements"][0]["checked"] = True
++    assert text != _state_text(changed)
++
++
++def test_candidate_false_state_and_rules_are_not_discarded():
++    row = question_row({"page": {}, "elements": []}, {
++        "criteria": {"1": {"element": "[1] Accessible", "role": "checkbox", "checked": False}},
++        "instructions": {"goal": "Find a place", "operation": "CLICK", "rules": ["First rule.", "Second rule."]},
++    })
++    assert "checked=false" in row["candidates"][0]
++    assert "First rule.\n\nSecond rule." in row["instruction"]
++
++
++def test_dom_replacement_is_not_task_progress_but_control_changes_are():
++    before = {"url": "https://example.test/", "title": "Search", "text": "Results", "fingerprint": "old",
++              "actions": [{"id": "e1", "node": 3, "kind": "click", "label": "Filter", "checked": "false"}]}
++    after = deepcopy(before)
++    after["fingerprint"] = "new"
++    after["actions"][0].update(id="e2", node=91)
++    assert progress_signature(before) == progress_signature(after)
++    after["actions"][0]["checked"] = "true"
++    assert progress_signature(before) != progress_signature(after)
+--- /dev/null
++++ b/tests/test_local_model.py
+@@ -0,0 +1,73 @@
++"""Offline contract for the local xiaojev backend. No paid APIs, no browser.
++
++Skips unless torch + CUDA + a local checkpoint are available; the model call
++runs on GPU. Default behavior (remote TypeSafe path) is not exercised here.
++"""
++
++import os
++from pathlib import Path
++
++import pytest
++
++from jev_ultrafast import local_model
++
++pytestmark = pytest.mark.skipif(
++    not os.environ.get("XIAOJEV_CKPT")
++    and not (Path(local_model._HOME) / "ckpt/v4_browser/manifest.json").is_file(),
++    reason="no local xiaojev checkpoint",
++)
++torch = pytest.importorskip("torch")
++if not torch.cuda.is_available():
++    pytest.skip("no CUDA device", allow_module_level=True)
++
++from jev_ultrafast import local_model, model  # noqa: E402
++
++
++def page():
++    return {
++        "url": "https://example.test/",
++        "title": "Search",
++        "text": "Search",
++        "actions": [
++            {"id": "e1", "kind": "fill", "label": "Search", "role": "textbox", "value": "", "node": 10},
++            {"id": "e2", "kind": "click", "label": "Open Search", "role": "textbox", "value": "", "node": 10},
++            {"id": "e3", "kind": "click", "label": "Go", "role": "button", "value": "", "node": 20},
++            {"id": "wait", "kind": "wait", "label": "Wait"},
++        ],
++    }
++
++
++def test_answer_shape_and_validation():
++    elements, targets, controls = model.action_space(page()["actions"])
++    body = {
++        "model": "local",
++        "state": {"page": {"url": "u", "title": "t", "text": "x"}, "elements": elements, "recent_actions": []},
++        "questions": {
++            "operation": {"type": "choice",
++                          "criteria": {"CLICK": "Click.", "TYPE_TEXT": "Type.", "DONE": "Done.", "BLOCKED": "Blocked."},
++                          "instructions": {"goal": "Find a book", "rules": "Pick one."}},
++            "click_target": {"type": "choice",
++                             "criteria": {"1": {"element": "[1] Search"}, "2": {"element": "[2] Go"}},
++                             "instructions": {"goal": "Find a book", "operation": "CLICK"}},
++        },
++    }
++    result = local_model.answer(body)
++    assert set(result["answers"]) == {"operation", "click_target"}
++    for qid, criteria in (("operation", body["questions"]["operation"]["criteria"]),
++                          ("click_target", body["questions"]["click_target"]["criteria"])):
++        model.validate_choice(result["answers"][qid], criteria)
++    assert result["usage"]["autoregressive_decode_steps"] == 0
++    assert result["usage"]["forward_passes"] == 1
++
++
++def test_choose_end_to_end_local(monkeypatch):
++    monkeypatch.setenv("JEV_BACKEND", "local")
++    monkeypatch.delenv("TYPESAFE_API_KEY", raising=False)  # local path must not need the key
++    d = model.choose(page(), "Find a book", [])
++    assert d["choice"] in {"e1", "e2", "e3", "wait", "DONE", "BLOCKED"}
++    assert d["operation"] in {"CLICK", "TYPE_TEXT", "WAIT", "DONE", "BLOCKED"}
++    assert set(d["raw_answers"]) == {"operation", "click_target", "type_text_target"}
++    assert 0 <= d["confidence"] <= 1
++    if d["target_probabilities"]:
++        assert abs(sum(d["target_probabilities"].values()) - 1) < 0.02
++    assert d["usage"]["autoregressive_decode_steps"] == 0

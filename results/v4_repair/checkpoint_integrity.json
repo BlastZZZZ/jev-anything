@@ -1,0 +1,29 @@
+{
+  "v4": {
+    "verified": true,
+    "sha256": {
+      "backbone/config.json": "0a4c268d8556a968dce14764350edebf2026fbd513e8f12709b1003d5b978ff5",
+      "backbone/model.safetensors": "7c3600dbf9894aed0736c6059d7b407485b55f0a71e8f7469eef99a27bdbfd3f",
+      "head.pt": "9d352ff5497ec6b263f419ebc2e98b3a815ba03929fa451bb01f4aeb0c6ad7d8",
+      "trainer.pt": "a94de08411421228b8fe208782b92a244b3d868b37c6e326c99bb19a973a05c7"
+    }
+  },
+  "v4_browser_dom/step150": {
+    "verified": true,
+    "sha256": {
+      "backbone/config.json": "0a4c268d8556a968dce14764350edebf2026fbd513e8f12709b1003d5b978ff5",
+      "backbone/model.safetensors": "05764c6c33742407b2291e105dbb10e104a85490980d561fdb9efc4006a30933",
+      "head.pt": "8baa24cd08e4363b63db843f57a744bd05b7020c37fd5c8c61be05f3fc0258eb",
+      "trainer.pt": "7bf0f3910801196b2c2e3a4ffa4030e5e4b55da1baa4f4eadc11711c56eac94f"
+    }
+  },
+  "v4_browser_dom/step100": {
+    "verified": true,
+    "sha256": {
+      "backbone/config.json": "0a4c268d8556a968dce14764350edebf2026fbd513e8f12709b1003d5b978ff5",
+      "backbone/model.safetensors": "f43d6b3fb7837cf101664bc6b9f2e0596fadadc48ba048d1a9d0daff8082984e",
+      "head.pt": "03fbdfc2efcbf5507f3d18151d3398fa1c41a6cc4d29953b23865e8f53def9c0",
+      "trainer.pt": "4f713980d67c8efa29af19726d6c3dd507952d909d7d26362b00a7b475b2818b"
+    }
+  }
+}

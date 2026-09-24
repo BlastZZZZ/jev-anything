@@ -1,0 +1,7 @@
+{
+  "checkpoint": "ckpt/v4_browser_repair/step300",
+  "step": 300,
+  "selection": "highest accuracy on fixed synthetic dev, ties prefer earlier checkpoint",
+  "dev_accuracy": 0.94,
+  "dev_n": 300
+}

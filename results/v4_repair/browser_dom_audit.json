@@ -1,0 +1,9 @@
+{
+  "rows": 5007,
+  "train_scenarios": 752,
+  "dev_scenarios": 148,
+  "overlap": 0,
+  "renderer": "actual local fixture DOM, randomized goal entities and field states",
+  "augmentation": "consistent permutation of observed indices and candidate tables",
+  "source_sha256": "fea1196b0caf6928dd30f89274730ec7b6ee8271be1145a83e950a6bbdb31034"
+}

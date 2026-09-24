@@ -17,25 +17,33 @@ calibrated by programmatic ground truth instead of teacher imitation.
 
 ## Headline numbers
 
-Current checkpoint: **v3** (three domains). v2 figures are kept in
-[docs/RESULTS.md](docs/RESULTS.md).
+Current release: **v4 + browser/RAG repairs**. The original v4 is a five-source
+model; browser use has a separate adapted checkpoint. RAG keeps the original
+v4 weights and combines its ranking with the dense retriever's ranking.
 
-| | **xiaojev v3** (0.6B) | Jev (closed API) | NanoJev (open) | Zero-shot Qwen3-0.6B |
-|---|---|---|---|---|
-| Semantic test acc ↑ (RAG decisions, n=2384) | **0.860** | — | — | 0.482 |
-| Probability test acc ↑ / TV ↓ | **0.880 / 0.105** | miscalibrated (fair coin → 0.89–0.95) | 0.385 / 0.463 | 0.497 / 0.471 |
-| Probability OOD acc ↑ (unseen mechanisms) | **0.753** | — | — | 0.569 |
-| Cross-primitive consistency ↓ | **0.029** | ~0.4 Choice-vs-Noul gap | 0.374 | 0.754 |
-| Game macro success (test / ood) | 42.2% / 15.8% | 65.4% / 43.7% | 66.8% / 45.5% | 15.4% / 12.2% |
-| Latency, single decision | **46–85 ms** (1× RTX 3090) | network API call | 57–84 ms (same GPU) | — |
-| Cost per decision | **$0 (local)** | paid API | $0 (local) | $0 (local) |
+| Evaluation | Before | Repaired release |
+|---|---:|---:|
+| Local hotel browser regression | Original v4: 0/2 | **4/4**, verified final pages |
+| MuSiQue independent test R@5, n=101 | Dense: 73.35%; v4 reorder: 65.35% | **77.31%** with fusion |
+| MuSiQue independent test QA EM, n=101 | Dense: 35.64% | **36.63%** |
+| Game macro success, test / OOD | v3: 42.16% / 15.76% | Original v4: **53.26% / 26.72%** |
 
-v3 is one 0.6B model that beats the zero-shot base by 30–45 points on RAG-style
-semantic decisions, stays far better calibrated than Jev on probabilities, and
-remains well above the base on games — the three-domain mix dilutes the game
-score relative to v2 (48.8% → 42.2% test macro), an honest tradeoff we report
-rather than hide. Details and every intermediate number:
-[docs/RESULTS.md](docs/RESULTS.md).
+Browser cases share the training fixture layout and participate in deployment
+selection; 4/4 is local regression evidence, not a general-web benchmark. The
+QA gain is small and not claimed significant. Original v4 improves games but
+regresses probability/semantic accuracy relative to v3; all tradeoffs and the
+rejected browser checkpoint are documented in the [v4 release report](docs/V4_REPAIR.md).
+
+Reproduce the RAG ranking results offline, without model downloads:
+
+```bash
+python -m rag_eval.evaluate_fusion --verify-calibration
+```
+
+[Live RAG interface](rag_eval/README.md) ·
+[Browser installation](integrations/jev-ultrafast/README.md) ·
+[Browser training](experiments/v4_browser/README.md) ·
+[Historical v1–v3 results](docs/RESULTS.md)
 
 ## Why this exists — six findings
 
@@ -226,57 +234,56 @@ artifact compatibility. Game rollouts of the Doom scenarios additionally need
 
 ## Browser agent integration
 
-[`integrations/jev-ultrafast/`](integrations/jev-ultrafast/) plugs xiaojev into
-the [jev-ultrafast](https://github.com/browser-use/jev-ultrafast) browser agent
-as a drop-in local backend (`JEV_BACKEND=local`, checkpoint from
-`XIAOJEV_CKPT`; free-form text is delegated to a local OpenAI-compatible server
-via `TEXT_MODEL_*`). One forward pass per decision, TypeSafe-API-shaped
-responses, zero autoregressive decode steps.
+[`integrations/jev-ultrafast/`](integrations/jev-ultrafast/) includes the local
+backend, a patch against a pinned upstream commit, and an installer. It fixes
+state serialization and repeated-action progress detection. Set
+`JEV_BACKEND=local`; the local scoring model selects operations/targets and an
+OpenAI-compatible text helper supplies only `TYPE_TEXT` values. Candidate
+scoring uses bounded microbatches with zero autoregressive decode steps.
 
-Current fixture status (**work in progress**): with v3, the first decision
-correctly picks the Destination input (probability 1.0) and the text helper
-produces "Lisbon" — but the agent re-fills the field 4 times instead of
-confirming the autocomplete suggestion and is stopped by the no-progress
-guard. Operation understanding: yes; web-interaction common sense: not yet —
-that is P4 browser-domain data work. Summary:
-[`results/fixture_v3_summary.json`](results/fixture_v3_summary.json).
+The repaired browser checkpoint passed four local hotel regressions twice,
+using 5, 5, 5, and 4 actions. Actual URLs and filter text were checked. See the
+[installation and limitations](integrations/jev-ultrafast/README.md) and
+[final evidence](results/v4_repair/browser_final_summary.json).
 
 ## Full results
 
-Every number cited above, with per-cell tables and the artifact file each
-table is computed from: **[docs/RESULTS.md](docs/RESULTS.md)**. Summary JSONs
-live in `results/`; per-row predictions and trajectories are reproducible but
-not committed.
+Current v4 metrics, checkpoint selection, validation limits, and evidence links
+are in **[docs/V4_REPAIR.md](docs/V4_REPAIR.md)**. Historical v1–v3 tables remain
+in [docs/RESULTS.md](docs/RESULTS.md). Summary JSONs live in `results/`; the v4
+repair also includes local fixture traces and frozen document-ranking inputs.
 
 ## Checkpoints
 
-Three checkpoints (~21 GB total, including optimizer states):
+- `ckpt/v1`: probability specialist.
+- `ckpt/v2`: probability + games.
+- `ckpt/v3`: probability + games + semantic decisions.
+- `ckpt/v4`: equal-weight mix of probability, games, semantic, browser, and hard-negative RAG decisions.
+- `ckpt/v4_browser_dom/step100`: separately adapted browser weights; `ckpt/v4_browser` is its local alias.
 
-- `xiaojev-v1` — probability specialist (TV 0.082)
-- `xiaojev-v2` — two-domain System One (probability + games; game macro 48.8%)
-- `xiaojev-v3` — three-domain System One (+ semantic/RAG decisions; semantic acc 0.860)
-
-> **TODO:** upload to HuggingFace — link placeholder `https://huggingface.co/TODO/xiaojev`.
-> Until then, all three can be retrained from scratch with the commands above;
-> data generation is seed-pinned and the training seed defaults to 0.
+Model binaries are not hosted in this Git repository and a public weight
+download is not yet available. The release includes checkpoint hashes,
+training/data code, and frozen evaluation evidence. Original v4 training and
+browser adaptation commands are in the [release report](docs/V4_REPAIR.md).
+The browser adaptation is not a new five-domain checkpoint.
 
 ## Requirements
 
 - One 24 GB GPU (developed on a single RTX 3090)
-- Python 3.12+ (developed on 3.10 with torch 2.10.0+cu128, transformers 4.57.6)
+- Python 3.10+ for the core; Python 3.12+ for the browser integration
 - `torch` 2.10, `transformers` 4.57, `httpx`, `pytest`; `vizdoom` only for the
   Doom game rollouts; vLLM only for serving the 27B probe target
 
 ## Limitations
 
-- **Research prototype.** Three checkpoints, one GPU, one random seed; no
+- **Research prototype.** Small-scale checkpoint experiments, one GPU, one training seed; no
   extensive hyperparameter search.
 - **8K context.** States are truncated to fit an 8192-token budget.
 - **Domain coverage.** Trained on programmatic probability mechanisms, four
   game tasks (Maze, Snake, Doom basic, Doom predict_position), and four
-  RAG-style semantic decision types built from QA gold labels. Browser-use and
-  other open-ended semantic domains are *not* trained; the browser-agent
-  integration is demonstrably not there yet (see fixture summary).
+  RAG-style semantic decisions built from QA gold labels, with browser and
+  hard-negative RAG sources added in v4. Browser adaptation is validated only
+  on a local fixture; arbitrary websites remain untested.
 - **Game supervision is teacher distillation** (Jev native_probs / visual
   expert policy), not ground truth; probability and semantic domains have
   exact targets (analytic / gold-label-derived).

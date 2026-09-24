@@ -1,0 +1,352 @@
+[
+  {
+    "config": {
+      "reranker_weight": 0,
+      "rank_constant": 1
+    },
+    "calibration_r5": 0.6964285714285712
+  },
+  {
+    "config": {
+      "reranker_weight": 0.1,
+      "rank_constant": 1
+    },
+    "calibration_r5": 0.6964285714285712
+  },
+  {
+    "config": {
+      "reranker_weight": 0.2,
+      "rank_constant": 1
+    },
+    "calibration_r5": 0.7270408163265303
+  },
+  {
+    "config": {
+      "reranker_weight": 0.3,
+      "rank_constant": 1
+    },
+    "calibration_r5": 0.7440476190476188
+  },
+  {
+    "config": {
+      "reranker_weight": 0.4,
+      "rank_constant": 1
+    },
+    "calibration_r5": 0.7687074829931971
+  },
+  {
+    "config": {
+      "reranker_weight": 0.5,
+      "rank_constant": 1
+    },
+    "calibration_r5": 0.7576530612244895
+  },
+  {
+    "config": {
+      "reranker_weight": 0.6,
+      "rank_constant": 1
+    },
+    "calibration_r5": 0.7610544217687073
+  },
+  {
+    "config": {
+      "reranker_weight": 0.7,
+      "rank_constant": 1
+    },
+    "calibration_r5": 0.7465986394557822
+  },
+  {
+    "config": {
+      "reranker_weight": 0.8,
+      "rank_constant": 1
+    },
+    "calibration_r5": 0.7227891156462584
+  },
+  {
+    "config": {
+      "reranker_weight": 1,
+      "rank_constant": 1
+    },
+    "calibration_r5": 0.673469387755102
+  },
+  {
+    "config": {
+      "reranker_weight": 0,
+      "rank_constant": 5
+    },
+    "calibration_r5": 0.6964285714285712
+  },
+  {
+    "config": {
+      "reranker_weight": 0.1,
+      "rank_constant": 5
+    },
+    "calibration_r5": 0.6964285714285712
+  },
+  {
+    "config": {
+      "reranker_weight": 0.2,
+      "rank_constant": 5
+    },
+    "calibration_r5": 0.7083333333333329
+  },
+  {
+    "config": {
+      "reranker_weight": 0.3,
+      "rank_constant": 5
+    },
+    "calibration_r5": 0.7168367346938772
+  },
+  {
+    "config": {
+      "reranker_weight": 0.4,
+      "rank_constant": 5
+    },
+    "calibration_r5": 0.7406462585034012
+  },
+  {
+    "config": {
+      "reranker_weight": 0.5,
+      "rank_constant": 5
+    },
+    "calibration_r5": 0.7559523809523807
+  },
+  {
+    "config": {
+      "reranker_weight": 0.6,
+      "rank_constant": 5
+    },
+    "calibration_r5": 0.7585034013605441
+  },
+  {
+    "config": {
+      "reranker_weight": 0.7,
+      "rank_constant": 5
+    },
+    "calibration_r5": 0.744047619047619
+  },
+  {
+    "config": {
+      "reranker_weight": 0.8,
+      "rank_constant": 5
+    },
+    "calibration_r5": 0.7117346938775511
+  },
+  {
+    "config": {
+      "reranker_weight": 1,
+      "rank_constant": 5
+    },
+    "calibration_r5": 0.673469387755102
+  },
+  {
+    "config": {
+      "reranker_weight": 0,
+      "rank_constant": 10
+    },
+    "calibration_r5": 0.6964285714285712
+  },
+  {
+    "config": {
+      "reranker_weight": 0.1,
+      "rank_constant": 10
+    },
+    "calibration_r5": 0.6989795918367344
+  },
+  {
+    "config": {
+      "reranker_weight": 0.2,
+      "rank_constant": 10
+    },
+    "calibration_r5": 0.7032312925170064
+  },
+  {
+    "config": {
+      "reranker_weight": 0.3,
+      "rank_constant": 10
+    },
+    "calibration_r5": 0.7091836734693875
+  },
+  {
+    "config": {
+      "reranker_weight": 0.4,
+      "rank_constant": 10
+    },
+    "calibration_r5": 0.736394557823129
+  },
+  {
+    "config": {
+      "reranker_weight": 0.5,
+      "rank_constant": 10
+    },
+    "calibration_r5": 0.7448979591836732
+  },
+  {
+    "config": {
+      "reranker_weight": 0.6,
+      "rank_constant": 10
+    },
+    "calibration_r5": 0.7389455782312923
+  },
+  {
+    "config": {
+      "reranker_weight": 0.7,
+      "rank_constant": 10
+    },
+    "calibration_r5": 0.7338435374149659
+  },
+  {
+    "config": {
+      "reranker_weight": 0.8,
+      "rank_constant": 10
+    },
+    "calibration_r5": 0.7066326530612245
+  },
+  {
+    "config": {
+      "reranker_weight": 1,
+      "rank_constant": 10
+    },
+    "calibration_r5": 0.673469387755102
+  },
+  {
+    "config": {
+      "reranker_weight": 0,
+      "rank_constant": 20
+    },
+    "calibration_r5": 0.6964285714285712
+  },
+  {
+    "config": {
+      "reranker_weight": 0.1,
+      "rank_constant": 20
+    },
+    "calibration_r5": 0.6989795918367344
+  },
+  {
+    "config": {
+      "reranker_weight": 0.2,
+      "rank_constant": 20
+    },
+    "calibration_r5": 0.7032312925170064
+  },
+  {
+    "config": {
+      "reranker_weight": 0.3,
+      "rank_constant": 20
+    },
+    "calibration_r5": 0.7100340136054419
+  },
+  {
+    "config": {
+      "reranker_weight": 0.4,
+      "rank_constant": 20
+    },
+    "calibration_r5": 0.7219387755102038
+  },
+  {
+    "config": {
+      "reranker_weight": 0.5,
+      "rank_constant": 20
+    },
+    "calibration_r5": 0.7329931972789113
+  },
+  {
+    "config": {
+      "reranker_weight": 0.6,
+      "rank_constant": 20
+    },
+    "calibration_r5": 0.7440476190476188
+  },
+  {
+    "config": {
+      "reranker_weight": 0.7,
+      "rank_constant": 20
+    },
+    "calibration_r5": 0.7134353741496596
+  },
+  {
+    "config": {
+      "reranker_weight": 0.8,
+      "rank_constant": 20
+    },
+    "calibration_r5": 0.7117346938775511
+  },
+  {
+    "config": {
+      "reranker_weight": 1,
+      "rank_constant": 20
+    },
+    "calibration_r5": 0.673469387755102
+  },
+  {
+    "config": {
+      "reranker_weight": 0,
+      "rank_constant": 60
+    },
+    "calibration_r5": 0.6964285714285712
+  },
+  {
+    "config": {
+      "reranker_weight": 0.1,
+      "rank_constant": 60
+    },
+    "calibration_r5": 0.7066326530612242
+  },
+  {
+    "config": {
+      "reranker_weight": 0.2,
+      "rank_constant": 60
+    },
+    "calibration_r5": 0.7049319727891155
+  },
+  {
+    "config": {
+      "reranker_weight": 0.3,
+      "rank_constant": 60
+    },
+    "calibration_r5": 0.7023809523809522
+  },
+  {
+    "config": {
+      "reranker_weight": 0.4,
+      "rank_constant": 60
+    },
+    "calibration_r5": 0.7321428571428569
+  },
+  {
+    "config": {
+      "reranker_weight": 0.5,
+      "rank_constant": 60
+    },
+    "calibration_r5": 0.7329931972789113
+  },
+  {
+    "config": {
+      "reranker_weight": 0.6,
+      "rank_constant": 60
+    },
+    "calibration_r5": 0.7363945578231289
+  },
+  {
+    "config": {
+      "reranker_weight": 0.7,
+      "rank_constant": 60
+    },
+    "calibration_r5": 0.7125850340136053
+  },
+  {
+    "config": {
+      "reranker_weight": 0.8,
+      "rank_constant": 60
+    },
+    "calibration_r5": 0.7006802721088434
+  },
+  {
+    "config": {
+      "reranker_weight": 1,
+      "rank_constant": 60
+    },
+    "calibration_r5": 0.673469387755102
+  }
+]

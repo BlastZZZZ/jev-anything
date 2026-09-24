@@ -1,0 +1,38 @@
+[
+  {
+    "qid": "2hop__107548_124896",
+    "top5_matches_frozen_evaluation": true,
+    "candidate_set_preserved": true,
+    "top5": [
+      "musique:11234",
+      "musique:11014",
+      "musique:6465",
+      "musique:3660",
+      "musique:5987"
+    ]
+  },
+  {
+    "qid": "2hop__121145_561444",
+    "top5_matches_frozen_evaluation": true,
+    "candidate_set_preserved": true,
+    "top5": [
+      "musique:4661",
+      "musique:4658",
+      "musique:6048",
+      "musique:7067",
+      "musique:4659"
+    ]
+  },
+  {
+    "qid": "2hop__124807_135019",
+    "top5_matches_frozen_evaluation": true,
+    "candidate_set_preserved": true,
+    "top5": [
+      "musique:9101",
+      "musique:3873",
+      "musique:2388",
+      "musique:11231",
+      "musique:3877"
+    ]
+  }
+]

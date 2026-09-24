@@ -1,5 +1,7 @@
 # xiaojev — Full Results
 
+For the current v4 browser/RAG release, see [V4_REPAIR.md](V4_REPAIR.md). The tables below retain the historical v1–v3 experiments.
+
 All numbers below are computed by the scripts in this repository and stored as
 raw JSON under `results/`. File names are given for each table so every cell
 can be traced back to an artifact.

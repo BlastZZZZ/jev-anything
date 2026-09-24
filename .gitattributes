@@ -1,0 +1,2 @@
+# Unified diffs encode an empty context line as a single space.
+integrations/jev-ultrafast/agent.patch -whitespace

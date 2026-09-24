@@ -1,0 +1,38 @@
+{
+  "gpu": "RTX 3090",
+  "checkpoint": "v4",
+  "samples_per_domain": 100,
+  "scope": "warm single-question end-to-end: tokenize, forward, softmax, CUDA synchronize",
+  "domains": {
+    "train": {
+      "p50_ms": 27.84,
+      "p95_ms": 31.29,
+      "mean_ms": 28.89,
+      "questions_per_second_from_p50": 35.9
+    },
+    "games": {
+      "p50_ms": 69.49,
+      "p95_ms": 99.77,
+      "mean_ms": 78.3,
+      "questions_per_second_from_p50": 14.4
+    },
+    "semantic": {
+      "p50_ms": 62.47,
+      "p95_ms": 110.36,
+      "mean_ms": 66.55,
+      "questions_per_second_from_p50": 16.0
+    },
+    "browser": {
+      "p50_ms": 38.29,
+      "p95_ms": 64.72,
+      "mean_ms": 42.17,
+      "questions_per_second_from_p50": 26.1
+    },
+    "rag": {
+      "p50_ms": 28.13,
+      "p95_ms": 101.75,
+      "mean_ms": 39.58,
+      "questions_per_second_from_p50": 35.5
+    }
+  }
+}

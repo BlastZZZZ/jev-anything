@@ -1,0 +1,9 @@
+{
+  "checkpoint": "ckpt/v4_browser_dom/step150",
+  "step": 150,
+  "selection": "highest accuracy on fixed synthetic dev, ties prefer earlier checkpoint",
+  "dev_accuracy": 0.86,
+  "dev_n": 150,
+  "data": "results/v4_repair/browser_dom.jsonl",
+  "initialized_from": "ckpt/v4_browser_repair/step300"
+}

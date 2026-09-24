@@ -1,0 +1,17 @@
+{
+  "checkpoint": "ckpt/v4_browser_dom/step100",
+  "step": 100,
+  "selection": "Deployment selection by local browser regression acceptance: step100 passed 4/4; highest-dev step150 passed 3/4 and was rejected.",
+  "dev_accuracy": 0.82,
+  "dev_n": 150,
+  "data": "results/v4_repair/browser_dom.jsonl",
+  "initialized_from": "ckpt/v4_browser_repair/step300",
+  "acceptance": "browser_dom100_summary.json",
+  "rejected_dev_best": {
+    "checkpoint": "ckpt/v4_browser_dom/step150",
+    "dev_accuracy": 0.86,
+    "acceptance": "browser_dom150_summary.json"
+  },
+  "stable_alias": "ckpt/v4_browser",
+  "final_acceptance": "browser_final_summary.json"
+}

@@ -1,0 +1,4 @@
+{"step": 0, "accuracy": 0.6733333333333333}
+{"step": 50, "accuracy": 0.7866666666666666}
+{"step": 100, "accuracy": 0.82}
+{"step": 150, "accuracy": 0.86}

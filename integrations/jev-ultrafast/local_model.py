@@ -5,21 +5,24 @@ Scores each choice question's candidates with the xiaojev scoring head
 {"answers": {qid: {"choice", "probabilities", "confidence"}}, "model", "usage"}.
 The model only ever returns an index over the offered candidates; it never
 emits selectors, code, or text.
-
-Configuration (environment variables):
-  XIAOJEV_HOME  xiaojev repo root (default: auto-detected relative to this file)
-  XIAOJEV_CKPT  checkpoint dir (default: <XIAOJEV_HOME>/ckpt/v3)
 """
 
 import json
 import os
+import re
 import sys
 import threading
 from pathlib import Path
 
-_HOME = os.environ.get(
-    "XIAOJEV_HOME", str(Path(__file__).resolve().parents[2])
+_ROOT_CANDIDATES = (
+    Path(__file__).resolve().parents[2],
+    Path(__file__).resolve().parents[2] / "xiaojev",
 )
+_DEFAULT_HOME = next(
+    (p for p in _ROOT_CANDIDATES if (p / "training/train.py").is_file()),
+    _ROOT_CANDIDATES[-1],
+)
+_HOME = os.environ.get("XIAOJEV_HOME", str(_DEFAULT_HOME))
 _STATE_CHAR_CAP = 6000
 _MICROBATCH_TOKENS = 16384
 
@@ -31,9 +34,17 @@ def _serialize(value):
     if isinstance(value, str):
         return value
     if isinstance(value, dict) and "element" in value:
-        extra = "; ".join(f"{k}={v}" for k, v in value.items()
-                          if k != "element" and v not in (None, "", False))
-        return value["element"] + (f" ({extra})" if extra else "")
+        match = re.fullmatch(r"\[([^]]+)\]\s*(.*)", value["element"])
+        label = f'[{match[1]}] "{match[2]}"' if match else value["element"]
+        extra = []
+        for key in ("role", "current_value", "checked", "selected", "expanded"):
+            if key in value and value[key] is not None:
+                extra.append(
+                    f"{key}={value[key]!r}"
+                    if key == "current_value"
+                    else f"{key}={str(value[key]).lower()}"
+                )
+        return label + (f" ({'; '.join(extra)})" if extra else "")
     return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
 
 
@@ -48,17 +59,24 @@ def _state_text(state):
     if elements:
         lines = []
         for e in elements:
-            bits = [f"role={e['role']}" if e.get("role") else None,
-                    f"operations={','.join(e['operations'])}" if e.get("operations") else None,
-                    f"value={e['value']!r}" if e.get("value") else None,
-                    f"options={len(e['options'])}" if e.get("options") else None]
+            bits = [
+                f"role={e['role']}" if e.get("role") else None,
+                f"operations={','.join(e['operations'])}"
+                if e.get("operations")
+                else None,
+                f"value={e['value']!r}" if "value" in e else None,
+            ]
             bits = [b for b in bits if b]
-            lines.append(f"[{e['index']}] \"{e.get('label', '')}\" ({'; '.join(bits)})")
+            for key in ("checked", "selected", "expanded"):
+                if key in e:
+                    bits.append(f"{key}={str(e[key]).lower()}")
+            if e.get("options"):
+                bits.append("options=" + json.dumps(e["options"], ensure_ascii=False))
+            lines.append(f'[{e["index"]}] "{e.get("label", "")}" ({"; ".join(bits)})')
         parts.append("ELEMENTS:\n" + "\n".join(lines))
     recent = state.get("recent_actions") or []
     if recent:
-        lines = [f"- {h.get('kind') or ''} \"{h.get('action') or ''}\""
-                 + (" (page changed)" if h.get("page_changed") else "") for h in recent]
+        lines = [json.dumps(h, ensure_ascii=False) for h in recent]
         parts.append("RECENT ACTIONS:\n" + "\n".join(lines))
     text = "\n\n".join(parts)
     if len(text) > _STATE_CHAR_CAP:
@@ -73,12 +91,27 @@ def _instruction_text(question):
         lines = []
         for k in order:
             if k in instr:
-                lines.append(f"{k.upper()}:\n{_serialize(instr[k])}")
+                value = instr[k]
+                text = (
+                    "\n\n".join(map(_serialize, value))
+                    if isinstance(value, list)
+                    else _serialize(value)
+                )
+                lines.append(f"{k.upper()}:\n{text}")
         for k, v in instr.items():
             if k not in order:
                 lines.append(f"{k.upper()}:\n{_serialize(v)}")
         return "\n".join(lines)
     return _serialize(instr)
+
+
+def question_row(state, question):
+    return {
+        "primitive": "choice",
+        "state": _state_text(state),
+        "instruction": _instruction_text(question),
+        "candidates": [_serialize(c) for c in question["criteria"].values()],
+    }
 
 
 def _load():
@@ -87,9 +120,12 @@ def _load():
         if _engine is None:
             sys.path.insert(0, os.path.join(_HOME, "training"))
             import torch  # noqa: F401
-            from transformers import AutoTokenizer
             from train import MODEL_PATH, StudentModel, load_ckpt
-            ckpt = os.environ.get("XIAOJEV_CKPT", os.path.join(_HOME, "ckpt/v3"))
+            from transformers import AutoTokenizer
+
+            ckpt = os.environ.get(
+                "XIAOJEV_CKPT", os.path.join(_HOME, "ckpt/v4_browser")
+            )
             tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
             model = StudentModel().to("cuda")
             load_ckpt(model, ckpt)
@@ -104,23 +140,16 @@ def answer(body):
     from train import collate, encode_row
 
     tokenizer, model, ckpt = _load()
-    state_text = _state_text(body["state"])
     paths, spans = [], []
     for qid, question in body["questions"].items():
         if question.get("type", "choice") != "choice":
             raise ValueError(f"Local backend only scores choice questions; got {qid!r}")
         criteria = question["criteria"]
         keys = list(criteria)
-        row = {
-            "primitive": "choice",
-            "state": state_text,
-            "instruction": _instruction_text(question),
-            "candidates": [_serialize(criteria[k]) for k in keys],
-        }
+        row = question_row(body["state"], question)
         _, _, row_paths = encode_row(tokenizer, row)
         spans.append((qid, keys, len(paths), len(row_paths)))
         paths.extend(row_paths)
-    tokens, mask, lengths = collate(paths, tokenizer.pad_token_id, "cuda")
     order = sorted(range(len(paths)), key=lambda i: -len(paths[i]))
     chunks, cur, cur_max = [], [], 0
     for i in order:
@@ -134,10 +163,12 @@ def answer(body):
         chunks.append(cur)
     scores = torch.empty(len(paths), dtype=torch.float32)
     for chunk in chunks:
-        idx = torch.tensor(chunk, device="cuda")
+        tokens, mask, lengths = collate(
+            [paths[i] for i in chunk], tokenizer.pad_token_id, "cuda"
+        )
         with torch.inference_mode(), torch.autocast("cuda", dtype=torch.bfloat16):
-            part = model(tokens[idx], mask[idx], lengths[idx])
-        scores[idx.cpu()] = part.float().cpu()
+            part = model(tokens, mask, lengths)
+        scores[chunk] = part.float().cpu()
     answers = {}
     for qid, keys, offset, k in spans:
         probs = torch.softmax(scores[offset : offset + k].double(), dim=-1)
@@ -146,7 +177,11 @@ def answer(body):
         choice = max(range(k), key=lambda i: (probs[i], -i))
         top = probs[choice]
         confidence = 1.0 if k == 1 else (top - 1 / k) / (1 - 1 / k)
-        answers[qid] = {"choice": keys[choice], "probabilities": dist, "confidence": confidence}
+        answers[qid] = {
+            "choice": keys[choice],
+            "probabilities": dist,
+            "confidence": confidence,
+        }
     return {
         "answers": answers,
         "model": f"xiaojev-local:{os.path.basename(ckpt.rstrip('/'))}",
@@ -155,6 +190,6 @@ def answer(body):
             "candidate_paths": len(paths),
             "forward_passes": len(chunks),
             "autoregressive_decode_steps": 0,
-            "prompt_tokens_estimate": int(lengths.sum().item()),
+            "prompt_tokens_estimate": sum(map(len, paths)),
         },
     }

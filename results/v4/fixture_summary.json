@@ -1,0 +1,57 @@
+{
+  "checkpoint": "v4",
+  "runs": [
+    {
+      "repeat": 1,
+      "trace": "integrations/jev-ultrafast/artifacts/dynamic/fixture/20260923T153239195393Z/state.json",
+      "status": "ready",
+      "actions": 15,
+      "verified": false,
+      "action_sequence": [
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays"
+      ],
+      "final_url": "http://127.0.0.1:8766/fixture.html?scenario=travel"
+    },
+    {
+      "repeat": 2,
+      "trace": "integrations/jev-ultrafast/artifacts/dynamic/fixture/20260923T153304399989Z/state.json",
+      "status": "ready",
+      "actions": 15,
+      "verified": false,
+      "action_sequence": [
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays",
+        "Find stays"
+      ],
+      "final_url": "http://127.0.0.1:8766/fixture.html?scenario=travel"
+    }
+  ],
+  "n_runs": 2,
+  "verified_successes": 0
+}

@@ -1,0 +1,47 @@
+{
+  "reader": "qwen3.8-27b",
+  "top_k": 4,
+  "baseline_source": "frozen v3 qa_predictions_dense.jsonl (earlier run)",
+  "metrics": {
+    "nontrain": {
+      "dense_top4": {
+        "n": 293,
+        "failures": 0,
+        "em_failures_as_zero": 0.310580204778157,
+        "f1_failures_as_zero": 0.41037890516963654
+      },
+      "v3_dense_cascade": {
+        "n": 293,
+        "failures": 0,
+        "em_failures_as_zero": 0.23208191126279865,
+        "f1_failures_as_zero": 0.30918378728055507
+      },
+      "v4_dense_cascade": {
+        "n": 293,
+        "failures": 0,
+        "em_failures_as_zero": 0.2832764505119454,
+        "f1_failures_as_zero": 0.38174300436898323
+      }
+    },
+    "test": {
+      "dense_top4": {
+        "n": 101,
+        "failures": 0,
+        "em_failures_as_zero": 0.3564356435643564,
+        "f1_failures_as_zero": 0.4487584472732987
+      },
+      "v3_dense_cascade": {
+        "n": 101,
+        "failures": 0,
+        "em_failures_as_zero": 0.2079207920792079,
+        "f1_failures_as_zero": 0.26389281785321383
+      },
+      "v4_dense_cascade": {
+        "n": 101,
+        "failures": 0,
+        "em_failures_as_zero": 0.24752475247524752,
+        "f1_failures_as_zero": 0.33220179160773217
+      }
+    }
+  }
+}

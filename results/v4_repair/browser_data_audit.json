@@ -1,0 +1,8 @@
+{
+  "rows": 16547,
+  "training_scenarios": 7705,
+  "dev_scenarios": 1295,
+  "overlap": 0,
+  "acceptance_goal_names_excluded_from_adaptation": true,
+  "data_sha256": "2a013f8d574020112c6a524f4a1c91a5a2e076f01bfcc36a1cea115eabd7adaf"
+}

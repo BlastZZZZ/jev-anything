@@ -26,3 +26,15 @@ __pycache__/
 # Local tooling caches
 .pip-cache/
 .venv/
+
+# Local services, credentials, and generated reproduction outputs
+.env
+.env.*
+!.env.example
+.chrome/
+.ruff_cache/
+datasets/
+results/retrieval/
+results/v4_browser/
+results/recomputed_fusion.json
+data/*.splits.json
